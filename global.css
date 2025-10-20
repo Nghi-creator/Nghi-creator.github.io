@@ -1,0 +1,87 @@
+:root {
+  --font-primary: 'Source Serif Pro', serif;
+  --font-secondary: 'Lato', sans-serif;
+  --font-ui: 'Inter', sans-serif;
+  --color-bg: #e9f9ff;
+  --color-text: #000000;
+  --color-text-secondary: #848383;
+  --color-accent: #5bc8f3;
+  --color-header-bg: #a9b8cd;
+  --color-white: #ffffff;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  font-family: var(--font-secondary);
+  color: var(--color-text);
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.page-wrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+  background-color: var(--color-bg);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+.container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.section-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.section-title {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 45px;
+  line-height: 1.2;
+}
+
+section {
+  padding: 80px 0;
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 36px;
+  }
+  section {
+    padding: 60px 0;
+  }
+}
