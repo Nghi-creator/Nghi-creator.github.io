@@ -9,385 +9,33 @@
 <title>CodeShift Team Introduction</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Lato:wght@400;600&family=Source+Serif+Pro:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="global.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Lato:wght@400;600&family=Source+Serif+Pro:wght@600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+
   <style id="sections-styles">
-/* CSS for section section:header */
-.header-section {
-  padding: 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background-color: var(--color-header-bg);
-}
-.header-top-bar {
-  height: 53px;
-  background-color: var(--color-bg);
-}
-.site-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 57px;
-}
-.main-nav {
-  display: flex;
-  gap: 52px;
-  font-family: var(--font-ui);
-  font-size: 18px;
-}
-.main-nav a {
-  font-weight: 500;
-  transition: color 0.3s;
-}
-.main-nav a:hover, .main-nav a.active {
-  font-weight: 700;
-  color: var(--color-text);
-}
-@media (max-width: 480px) {
-  .main-nav {
-    gap: 24px;
-    font-size: 16px;
-  }
-}
-
-/* CSS for section section:hero */
-.hero-section {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 759px;
-  padding: 100px 0;
-  text-align: center;
-  color: var(--color-white);
-  overflow: hidden;
-}
-.hero-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('images/be2fe3be41371294fdabafb5edf3d08a40b76d0e.png');
-  background-size: cover;
-  background-position: center;
-  z-index: -2;
-}
-.hero-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: -1;
-}
-.hero-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 35px;
-}
-.hero-subtitle {
-  font-family: var(--font-primary);
-  font-weight: 700;
-  font-size: 48px;
-}
-.hero-title {
-  font-family: var(--font-primary);
-  font-weight: 700;
-  font-size: 96px;
-  line-height: 1;
-  margin-top: -20px;
-}
-.hero-description {
-  font-family: var(--font-secondary);
-  font-weight: 600;
-  font-size: 24px;
-  line-height: 1.5;
-  max-width: 753px;
-}
-.hero-cta {
-  background-color: var(--color-accent);
-  color: var(--color-text);
-  padding: 10px 28px;
-  border-radius: 10px;
-  font-family: var(--font-secondary);
-  font-weight: 600;
-  font-size: 18px;
-  transition: background-color 0.3s;
-}
-.hero-cta:hover {
-  background-color: #4ab8e6;
-}
-@media (max-width: 768px) {
-  .hero-subtitle { font-size: 28px; }
-  .hero-title { font-size: 64px; }
-  .hero-description { font-size: 18px; }
-}
-
-/* CSS for section section:about */
-.about-cards-grid {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
-}
-.member-card {
-  width: 315px;
-  position: relative;
-}
-.member-card-photo {
-  width: 100%;
-  height: 320px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-.member-card-content {
-  background-color: #d7f0fa;
-  padding: 24px;
-  margin-top: -46px;
-  position: relative;
-  z-index: 1;
-  border-radius: 8px;
-  min-height: 274px;
-  display: flex;
-  flex-direction: column;
-}
-.member-card-name {
-  font-family: var(--font-primary);
-  font-weight: 600;
-  font-size: 23px;
-  margin-bottom: 8px;
-}
-.member-card-bio {
-  font-family: var(--font-secondary);
-  font-size: 17px;
-  color: var(--color-text-secondary);
-  line-height: 1.4;
-  position: relative;
-  padding-left: 10px;
-  flex-grow: 1;
-}
-.quote-icon {
-  position: absolute;
-  left: -10px;
-  top: 0;
-}
-.member-card-arrow {
-  align-self: flex-start;
-  margin-top: 20px;
-}
-
-/* CSS for section section:members */
-.members-list {
-  display: flex;
-  flex-direction: column;
-  gap: 120px;
-}
-.member-profile {
-  display: flex;
-  align-items: center;
-  gap: 60px;
-}
-.member-profile:nth-child(even) {
-  flex-direction: row-reverse;
-}
-.member-text {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-}
-.member-text.align-right {
-  align-items: flex-end;
-  text-align: right;
-}
-.member-name {
-  font-family: var(--font-primary);
-  font-weight: 600;
-  font-size: 36px;
-}
-.name-underline {
-  width: 309px;
-  height: 3px;
-  background-color: var(--color-accent);
-}
-.member-description {
-  font-family: var(--font-secondary);
-  font-size: 20px;
-  line-height: 1.5;
-  color: var(--color-text-secondary);
-  max-width: 570px;
-}
-.member-image-wrapper {
-  flex: 1;
-  position: relative;
-  min-height: 550px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.member-photo {
-  width: 520px;
-  height: 512px;
-  object-fit: cover;
-  transform: rotate(-18.73deg);
-  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.18);
-  clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
-  position: relative;
-  z-index: 1;
-}
-.member-image-wrapper [class^="deco-"] {
-  position: absolute;
-  z-index: 0;
-}
-.deco-1 { top: -20px; left: 0px; }
-.deco-2 { top: 24px; left: 41px; }
-.deco-3 { top: 7px; right: 85px; }
-.deco-4 { bottom: 120px; right: 18px; }
-.deco-5 { bottom: -40px; left: 0px; }
-.deco-6 { top: -35px; left: 21px; }
-.deco-7 { bottom: 130px; left: -113px; }
-.deco-8 { bottom: -10px; left: -60px; }
-.deco-9 { bottom: -50px; left: 0px; }
-.deco-10 { top: -43px; left: 42px; }
-.deco-11 { top: -52px; right: 82px; }
-.deco-12 { bottom: -50px; right: 29px; }
-
-@media (max-width: 1024px) {
-  .member-profile, .member-profile:nth-child(even) {
-    flex-direction: column;
-    text-align: center;
-  }
-  .member-text.align-right, .member-text {
-    align-items: center;
-    text-align: center;
-  }
-}
-
-/* CSS for section section:contact */
-.contact-info-grid {
-  display: flex;
-  justify-content: center;
-  gap: 50px;
-  flex-wrap: wrap;
-  margin-left: 120px;
-}
-.contact-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 24px;
-  max-width: 334px;
-}
-.contact-icon {
-  width: 128px;
-  height: 128px;
-}
-.contact-title {
-  font-family: var(--font-primary);
-  font-weight: 600;
-  font-size: 24px;
-  margin-top: -14px;
-}
-.contact-details {
-  font-family: var(--font-secondary);
-  font-size: 18px;
-  line-height: 1.5;
-  margin-top: -14px;
-}
-
-@media (max-width: 480px) {
-  .contact-info-grid {
-    gap: 24px;
-  }
-  .contact-item {
-    gap: 16px;
-  }
-  .contact-icon {
-    width: 72px;
-    height: 72px;
-  }
-  .contact-title {
-    font-size: 18px;
-  }
-  .contact-details {
-    font-size: 14px;
-  }
-}
-
-/* CSS for section section:footer */
-.site-footer {
-  padding: 30px 0;
-}
-.footer-divider {
-  height: 6px;
-  background-color: var(--color-accent);
-  margin-bottom: 40px;
-}
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  font-family: var(--font-ui);
-  font-size: 18px;
-}
-.copyright {
-  font-weight: 400;
-}
-.back-to-top {
-  font-weight: 500;
-}
-
-@media (max-width: 480px) {
-  .footer-content {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    text-align: center;
-  }
-  .site-footer {
-    padding: 20px 0;
-  }
-  .footer-divider {
-    height: 4px;
-    margin-bottom: 20px;
-  }
-  .footer-content {
-    font-size: 15px;
-  }
-  .back-to-top {
-    font-size: 15px;
-  }
-}
 
   </style>
+  <script src="global.js" defer></script>
 </head>
 <body>
-<section id="header" class="header-section">
-  <div class="header-top-bar"></div>
-  <header class="site-header container">
+<header id="section-header" class="site-header">
+  <div class="container">
     <nav class="main-nav">
-      <a href="#section-hero">Home</a>
-      <a href="#section-about">About us</a>
-      <a href="#section-contact">Contact</a>
+      <ul>
+        <li><a href="#section-hero">Home</a></li>
+        <li><a href="#section-about" class="active">About us</a></li>
+        <li><a href="#section-contact">Contact</a></li>
+      </ul>
     </nav>
-  </header>
-</section>
+  </div>
+</header>
 <section id="section-hero" class="hero-section">
   <div class="hero-background"></div>
   <div class="container">
     <div class="hero-content">
       <h2 class="hero-subtitle">WELCOME TO OUR TEAM INTRODUCTION</h2>
       <h1 class="hero-title">CodeShift</h1>
-      <p class="hero-description">We’re CodeShift, a team of three developers exploring modern web technologies and creative solutions. Our goal is to craft innovative websites that stand out in both design and performance.</p>
+      <p class="hero-description">We're CodeShift, a team of three developers exploring modern web technologies and creative solutions. Our goal is to craft innovative websites that stand out in both design and performance.</p>
       <a href="#section-about" class="hero-cta">See More</a>
     </div>
   </div>
@@ -396,45 +44,45 @@
   <div class="container">
     <div class="section-title-wrapper">
       <h2 class="section-title">About us</h2>
-      <img src="images/1_1573.svg" alt="decorative underline" />
+      <img src="images/underline.svg" alt="decorative underline" />
     </div>
     <div class="about-cards-grid">
       <article class="member-card">
-        <img class="member-card-photo" src="images/badb292f2958e16aef58782d9e56dd27e66b1ab6.png" alt="Photo of Phan Quang Minh">
+        <img class="member-card-photo" src="images/pqminh.png" alt="Photo of Phan Quang Minh">
         <div class="member-card-content">
           <h3 class="member-card-name">Phan Quang Minh</h3>
           <p class="member-card-bio">
-            <img src="images/I2_120_1_72.svg" alt="quote icon" class="quote-icon">
-            &nbsp;&nbsp;&nbsp;&nbsp;Aspiring UI/UX designer, passionate about crafting intuitive interfaces and exploring creative design solutions.
+            <img src="images/quote.svg" alt="quote icon" class="quote-icon">
+            Aspiring UI/UX designer, passionate about crafting intuitive interfaces and exploring creative design solutions.
           </p>
           <a href="#pqminh" class="member-card-arrow">
-            <img src="images/I2_120_1_66.svg" alt="arrow icon">
+            <img src="images/arrow.svg" alt="arrow icon">
           </a>
         </div>
       </article>
       <article class="member-card">
-        <img class="member-card-photo" src="images/29c96d3baf0ae5c2f1c456d97c32474655d6abad.png" alt="Photo of Trần Anh Khoa">
+        <img class="member-card-photo" src="images/takhoa.png" alt="Photo of Trần Anh Khoa">
         <div class="member-card-content">
           <h3 class="member-card-name">Trần Anh Khoa</h3>
           <p class="member-card-bio">
-            <img src="images/I0_233_1_91.svg" alt="quote icon" class="quote-icon">
-            &nbsp;&nbsp;&nbsp;&nbsp;Aspiring front-end developer, loves experimenting with layouts and improving the user experience.
+            <img src="images/quote.svg" alt="quote icon" class="quote-icon">
+            Aspiring front-end developer, loves experimenting with layouts and improving the user experience.”
           </p>
           <a href="#takhoa" class="member-card-arrow">
-            <img src="images/I0_233_1_92.svg" alt="arrow icon">
+            <img src="images/arrow.svg" alt="arrow icon">
           </a>
         </div>
       </article>
       <article class="member-card">
-        <img class="member-card-photo" src="images/8a27ffa80174ddff3702d38fb090fd74c2099c2f.png" alt="Photo of Nguyễn Gia Nghi">
+        <img class="member-card-photo" src="images/ngnghi.png" alt="Photo of Nguyễn Gia Nghi">
         <div class="member-card-content">
           <h3 class="member-card-name">Nguyễn Gia Nghi</h3>
           <p class="member-card-bio">
-            <img src="images/I0_234_1_127.svg" alt="quote icon" class="quote-icon">
-            &nbsp;&nbsp;&nbsp;&nbsp;Front-end developer with a focus on creating smooth user experiences and clean design.”
+            <img src="images/quote.svg" alt="quote icon" class="quote-icon">
+            Front-end developer with a focus on creating smooth user experiences and clean design.”
           </p>
           <a href="#ngnghi" class="member-card-arrow">
-            <img src="images/I0_234_1_129.svg" alt="arrow icon">
+            <img src="images/arrow.svg" alt="arrow icon">
           </a>
         </div>
       </article>
@@ -445,52 +93,49 @@
   <div class="container">
     <div class="section-title-wrapper">
       <h2 class="section-title">Members Information</h2>
-      <img src="images/1_1469.svg" alt="decorative underline" />
+      <img src="images/underline.svg" alt="decorative underline" />
     </div>
     <div class="members-list">
       <article id="pqminh" class="member-profile">
         <div class="member-text">
           <h3 class="member-name">Phan Quang Minh</h3>
           <div class="name-underline"></div>
-          <p class="member-description">I’m a UI/UX designer with a passion for crafting thoughtful, aesthetic, and user-focused web designs. I love exploring new technologies and creative tools to bring fresh perspectives and innovative ideas into my work. I enjoy designing seamless digital experiences that blend beauty, clarity, and functionality to elevate user satisfaction.</p>
+          <p class="member-description">I'm a UI/UX designer with a passion for crafting thoughtful, aesthetic, and user-focused web designs. I love exploring new technologies and creative tools to bring fresh perspectives and innovative ideas into my work. I enjoy designing seamless digital experiences that blend beauty, clarity, and functionality to elevate user satisfaction.</p>
         </div>
-        <!--merged image-->
         <div class="member-image-wrapper">
-          <img class="member-photo" src="images/badb292f2958e16aef58782d9e56dd27e66b1ab6.png" alt="Phan Quang Minh">
-          <img class="deco-1" src="images/1_1416.svg" alt="decoration">
-          <img class="deco-2" src="images/1_1442.svg" alt="decoration">
-          <img class="deco-3" src="images/1_1446.svg" alt="decoration">
-          <img class="deco-4" src="images/1_1452.svg" alt="decoration">
+          <img class="member-photo" src="images/pqminh.png" alt="Phan Quang Minh">
+          <img class="deco-1" src="images/shape1.svg" alt="decoration">
+          <img class="deco-2" src="images/shape2.svg" alt="decoration">
+          <img class="deco-3" src="images/shape3.svg" alt="decoration">
+          <img class="deco-4" src="images/shape4.svg" alt="decoration">
         </div>
       </article>
       <article id="takhoa" class="member-profile">
         <div class="member-text align-right">
           <h3 class="member-name">Trần Anh Khoa</h3>
           <div class="name-underline"></div>
-          <p class="member-description">I’m a web development student with a strong interest in building clean, functional, and responsive websites. My current focus is on mastering front-end technologies such as HTML, CSS, and JavaScript, while exploring how design and usability shape the user experience. I enjoy experimenting with layouts and visual styles to make interfaces both practical and appealing. I’m continually learning and refining my skills to meet modern web standards and design principles.</p>
+          <p class="member-description">I'm a web development student with a strong interest in building clean, functional, and responsive websites. My current focus is on mastering front-end technologies such as HTML, CSS, and JavaScript, while exploring how design and usability shape the user experience. I enjoy experimenting with layouts and visual styles to make interfaces both practical and appealing. I'm continually learning and refining my skills to meet modern web standards and design principles.</p>
         </div>
-        <!--merged image-->
         <div class="member-image-wrapper">
-          <img class="member-photo" src="images/29c96d3baf0ae5c2f1c456d97c32474655d6abad.png" alt="Trần Anh Khoa">
-          <img class="deco-5" src="images/1_1417.svg" alt="decoration">
-          <img class="deco-6" src="images/1_1444.svg" alt="decoration">
-          <img class="deco-7" src="images/1_1448.svg" alt="decoration">
-          <img class="deco-8" src="images/1_1454.svg" alt="decoration">
+          <img class="member-photo" src="images/takhoa.png" alt="Trần Anh Khoa">
+          <img class="deco-5" src="images/shape1.svg" alt="decoration">
+          <img class="deco-6" src="images/shape5.svg" alt="decoration">
+          <img class="deco-7" src="images/shape3.svg" alt="decoration">
+          <img class="deco-8" src="images/shape4.svg" alt="decoration">
         </div>
       </article>
       <article id="ngnghi" class="member-profile">
         <div class="member-text">
           <h3 class="member-name">Nguyễn Gia Nghi</h3>
           <div class="name-underline"></div>
-          <p class="member-description">I’m a front-end developer with a passion for crafting clean, responsive, and user-friendly web experiences. I love turning design ideas into interactive, functional interfaces that feel intuitive and engaging. I enjoy working with modern tools like React, Tailwind CSS, and JavaScript to bring projects to life, and I’m always looking for ways to improve performance and usability.</p>
+          <p class="member-description">I'm a front-end developer with a passion for crafting clean, responsive, and user-friendly web experiences. I love turning design ideas into interactive, functional interfaces that feel intuitive and engaging. I enjoy working with modern tools like React, Tailwind CSS, and JavaScript to bring projects to life, and I'm always looking for ways to improve performance and usability.</p>
         </div>
-        <!--merged image-->
         <div class="member-image-wrapper">
-          <img class="member-photo" src="images/6c8ef7f971076848dde8fd6cd4efa7e2f356dd02.png" alt="Nguyễn Gia Nghi">
-          <img class="deco-9" src="images/1_1457.svg" alt="decoration">
-          <img class="deco-10" src="images/1_1459.svg" alt="decoration">
-          <img class="deco-11" src="images/1_1461.svg" alt="decoration">
-          <img class="deco-12" src="images/1_1464.svg" alt="decoration">
+          <img class="member-photo" src="images/ngnghi.png" alt="Nguyễn Gia Nghi">
+          <img class="deco-9" src="images/shape1.svg" alt="decoration">
+          <img class="deco-10" src="images/shape6.svg" alt="decoration">
+          <img class="deco-11" src="images/shape3.svg" alt="decoration">
+          <img class="deco-12" src="images/shape4.svg" alt="decoration">
         </div>
       </article>
     </div>
@@ -500,21 +145,21 @@
   <div class="container">
     <div class="section-title-wrapper">
       <h2 class="section-title">Contact us</h2>
-      <img src="images/1_1507.svg" alt="decorative underline" />
+      <img src="images/underline.svg" alt="decorative underline" />
     </div>
     <div class="contact-info-grid">
       <div class="contact-item">
-        <img src="images/bb87ddaf44a2b68040ef9d3599379e657eab5a10.png" alt="Email icon" class="contact-icon">
+        <img src="images/envelope.png" alt="Email icon" class="contact-icon">
         <h3 class="contact-title">Email</h3>
         <p class="contact-details">takhoa23@clc.fitus.edu.vn<br>pqminh23@clc.fitus.edu.vn<br>ngnghi23@clc.fitus.edu.vn</p>
       </div>
       <div class="contact-item">
-        <img src="images/5609946e17c8b4c1dd03b161543ab7cba5c30be1.png" alt="Facebook icon" class="contact-icon">
+        <img src="images/facebook.png" alt="Facebook icon" class="contact-icon">
         <h3 class="contact-title">Facebook</h3>
         <p class="contact-details">https://www.facebook.com/khoa.tran.609003/</p>
       </div>
       <div class="contact-item">
-        <img src="images/4c5fcfb250bdc98a4fd5ca4fd74dc56bc2471994.png" alt="University icon" class="contact-icon">
+        <img src="images/university.png" alt="University icon" class="contact-icon">
         <h3 class="contact-title">University info</h3>
         <p class="contact-details">University of Science<br>227 Nguyễn Văn Cừ, Phường 4, Quận 5, Thành phố Hồ Chí Minh</p>
       </div>
@@ -525,7 +170,7 @@
   <div class="footer-divider"></div>
   <div class="container">
     <div class="footer-content">
-      <p class="copyright">© 2025 CodeShift – Web Development Course, HCMUS</p>
+      <p class="copyright">© 2025 CodeShift - Web Development Course, HCMUS</p>
       <a href="#" class="back-to-top">Back to top</a>
     </div>
   </div>
