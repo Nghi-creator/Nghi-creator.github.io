@@ -79,12 +79,29 @@ section {
   padding: 80px 0;
 }
 
+@media (max-width: 1200px) {
+  .about-cards-grid {
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+  .member-card {
+    width: 300px;
+  }
+}
+
 @media (max-width: 768px) {
   .section-title {
     font-size: 36px;
   }
   section {
     padding: 60px 0;
+  }
+  .about-cards-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+  .member-card {
+    width: 315px;
   }
 }
 
@@ -198,12 +215,13 @@ section {
 .about-cards-grid {
   display: flex;
   justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
+  gap: 20px;
+  flex-wrap: nowrap;
 }
 .member-card {
-  width: 315px;
+  width: 280px;
   position: relative;
+  flex-shrink: 0;
 }
 .member-card-photo {
   width: 100%;
