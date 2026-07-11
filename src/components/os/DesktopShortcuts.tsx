@@ -5,10 +5,12 @@ export function DesktopShortcuts({
   selectedApp,
   onSelect,
   onOpen,
+  onMobileOpen,
 }: {
   selectedApp: AppId | null;
   onSelect: (id: AppId) => void;
   onOpen: (id: AppId) => void;
+  onMobileOpen?: (id: AppId) => void;
 }) {
   return (
     <nav className="grid w-full max-w-sm grid-cols-3 gap-x-5 gap-y-5 sm:max-w-none sm:grid-cols-6 lg:w-52 lg:grid-flow-col lg:grid-cols-[5.5rem_5.5rem] lg:grid-rows-6 lg:gap-x-3 lg:gap-y-2">
@@ -23,7 +25,12 @@ export function DesktopShortcuts({
                 ? "bg-white/16 ring-2 ring-white/45 shadow-[0_8px_26px_rgba(0,0,0,0.25)]"
                 : "hover:bg-white/10"
             }`}
-            onClick={() => onSelect(id)}
+            onClick={() => {
+              onSelect(id);
+              if (globalThis.window.innerWidth < 1024) {
+                onMobileOpen?.(id);
+              }
+            }}
             onDoubleClick={() => onOpen(id)}
             aria-pressed={selected}
             title={`Double-click to open ${appMeta[id].title}`}

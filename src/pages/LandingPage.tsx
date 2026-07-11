@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
 
 const introLine = "hi, i am nicholas nguyen, glad to meet you";
+const bootLines = [
+  "mounting /profile",
+  "loading projects",
+  "restoring workspace",
+  "initializing CreatorOS",
+];
 
 export function LandingPage({ onEnter }: { onEnter: () => void }) {
   const [typedText, setTypedText] = useState("");
   const [isDeletingIntro, setIsDeletingIntro] = useState(false);
+  const [isBooting, setIsBooting] = useState(false);
+  const [bootLineCount, setBootLineCount] = useState(0);
 
   useEffect(() => {
     const atFullText = typedText.length === introLine.length;
@@ -39,11 +47,39 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
     return () => window.clearTimeout(timer);
   }, [typedText, isDeletingIntro]);
 
+  useEffect(() => {
+    if (!isBooting) {
+      return;
+    }
+
+    if (bootLineCount < bootLines.length) {
+      const timer = window.setTimeout(
+        () => setBootLineCount((current) => current + 1),
+        bootLineCount === 0 ? 120 : 280,
+      );
+
+      return () => window.clearTimeout(timer);
+    }
+
+    const enterTimer = window.setTimeout(onEnter, 420);
+    return () => window.clearTimeout(enterTimer);
+  }, [bootLineCount, isBooting, onEnter]);
+
+  function handleBoot() {
+    if (isBooting) {
+      return;
+    }
+
+    setBootLineCount(0);
+    setIsBooting(true);
+  }
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white">
       <video
         className="absolute inset-0 h-full w-full object-cover"
         src="/2001_chimp.mp4"
+        poster="/2001_chimp_poster.jpg"
         autoPlay
         muted
         loop
@@ -58,12 +94,40 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
         </p>
 
         <button
-          className="absolute top-[68%] inline-flex items-center justify-center rounded-md border border-[#9be7b3]/45 bg-[#0f4d2e] px-6 py-3 font-mono text-sm font-black uppercase tracking-[0.18em] text-[#eafff1] shadow-[0_18px_60px_rgba(5,36,22,0.58)] transition hover:-translate-y-0.5 hover:bg-[#1f7a4a] focus:outline-none focus:ring-2 focus:ring-[#9be7b3] focus:ring-offset-2 focus:ring-offset-black"
-          onClick={onEnter}
+          className="absolute top-[68%] inline-flex items-center justify-center rounded-md border border-[#9be7b3]/45 bg-[#0f4d2e] px-6 py-3 font-mono text-sm font-black uppercase tracking-[0.18em] text-[#eafff1] shadow-[0_18px_60px_rgba(5,36,22,0.58)] transition hover:-translate-y-0.5 hover:bg-[#1f7a4a] focus:outline-none focus:ring-2 focus:ring-[#9be7b3] focus:ring-offset-2 focus:ring-offset-black disabled:cursor-wait disabled:opacity-70"
+          onClick={handleBoot}
+          disabled={isBooting}
         >
-          Boot Creator OS
+          {isBooting ? "Booting..." : "Boot CreatorOS"}
         </button>
       </section>
+
+      {isBooting ? (
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/72 px-5 backdrop-blur-sm">
+          <div className="w-full max-w-xl rounded-lg border border-[#1f7a4a]/45 bg-[#06160e]/95 p-5 text-left shadow-[0_24px_90px_rgba(0,0,0,0.65)]">
+            <p className="font-mono text-xs font-black uppercase tracking-[0.26em] text-[#9be7b3]">
+              CreatorOS boot sequence
+            </p>
+            <div className="mt-4 min-h-36 space-y-2 font-mono text-sm font-bold text-emerald-50/85 sm:text-base">
+              {bootLines.slice(0, bootLineCount).map((line) => (
+                <p key={line}>
+                  <span className="text-[#4ade80]">&gt;</span> {line}
+                </p>
+              ))}
+              {bootLineCount < bootLines.length ? (
+                <p aria-label="boot command loading">
+                  <span className="text-[#4ade80]">&gt;</span>{" "}
+                  <span className="typing-cursor inline-block h-[1em] w-[0.55em] translate-y-[0.12em] bg-[#9be7b3]" />
+                </p>
+              ) : (
+                <p className="text-[#9be7b3]">
+                  <span className="text-[#4ade80]">&gt;</span> handoff complete
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }

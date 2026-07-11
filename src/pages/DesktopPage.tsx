@@ -2,11 +2,13 @@ import {
   FormEvent,
   KeyboardEvent,
   PointerEvent as ReactPointerEvent,
+  ReactNode,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
+import { X } from "lucide-react";
 import { CertificationsApp } from "../components/apps/CertificationsApp";
 import { ContactApp } from "../components/apps/ContactApp";
 import { EducationApp } from "../components/apps/EducationApp";
@@ -75,6 +77,13 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
   const dragState = useRef<DragState | null>(null);
 
   const topZ = useMemo(() => Math.max(...windows.map((window) => window.z)), [windows]);
+  const activeMobileWindow = useMemo(
+    () =>
+      windows
+        .filter((window) => window.open)
+        .sort((left, right) => right.z - left.z)[0] ?? null,
+    [windows],
+  );
 
   useEffect(() => {
     window.localStorage.setItem(WINDOW_LAYOUT_STORAGE_KEY, JSON.stringify(windows));
@@ -248,6 +257,7 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
         <video
           className="absolute inset-0 h-full w-full object-cover object-center opacity-95 [image-rendering:auto]"
           src="/2001_space.mp4"
+          poster="/2001_space_poster.jpg"
           autoPlay
           muted
           loop
@@ -265,36 +275,84 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
             selectedApp={selectedDesktopApp}
             onSelect={setSelectedDesktopApp}
             onOpen={launchWindow}
+            onMobileOpen={launchWindow}
           />
 
-          {windows.map((window) =>
-            window.open ? (
-              <OSWindow
-                key={`${window.id}-${window.animationKey}`}
-                window={window}
-                onClose={closeWindow}
-                onFocus={focusWindow}
-                onToggleMaximize={toggleMaximize}
-                onStartDrag={startWindowDrag}
-                onResize={resizeWindow}
-              >
-                {renderWindowContent(window, {
-                  selectedSkill,
-                  setSelectedSkill,
-                  terminalLines,
-                  terminalInput,
-                  setTerminalInput,
-                  submitTerminal,
-                  handleTerminalKey,
-                })}
-              </OSWindow>
-            ) : null,
-          )}
+          {activeMobileWindow ? (
+            <MobileAppPanel
+              window={activeMobileWindow}
+              onClose={closeWindow}
+              content={renderWindowContent(activeMobileWindow, {
+                selectedSkill,
+                setSelectedSkill,
+                terminalLines,
+                terminalInput,
+                setTerminalInput,
+                submitTerminal,
+                handleTerminalKey,
+              })}
+            />
+          ) : null}
+
+          <div className="hidden lg:contents">
+            {windows.map((window) =>
+              window.open ? (
+                <OSWindow
+                  key={`${window.id}-${window.animationKey}`}
+                  window={window}
+                  onClose={closeWindow}
+                  onFocus={focusWindow}
+                  onToggleMaximize={toggleMaximize}
+                  onStartDrag={startWindowDrag}
+                  onResize={resizeWindow}
+                >
+                  {renderWindowContent(window, {
+                    selectedSkill,
+                    setSelectedSkill,
+                    terminalLines,
+                    terminalInput,
+                    setTerminalInput,
+                    submitTerminal,
+                    handleTerminalKey,
+                  })}
+                </OSWindow>
+              ) : null,
+            )}
+          </div>
         </section>
 
         <Taskbar openWindow={launchWindow} now={now} bouncingApp={bouncingApp} />
       </div>
     </main>
+  );
+}
+
+function MobileAppPanel({
+  window,
+  onClose,
+  content,
+}: {
+  window: WindowState;
+  onClose: (id: AppId) => void;
+  content: ReactNode;
+}) {
+  return (
+    <article className="mt-6 flex max-h-[calc(100vh-16rem)] flex-col overflow-hidden rounded-lg border border-[#1f7a4a]/35 bg-[#06160e]/95 shadow-window backdrop-blur-2xl lg:hidden">
+      <header className="flex h-11 shrink-0 items-center justify-between border-b border-[#1f7a4a]/25 bg-[#071d12] px-3">
+        <div className="flex items-center gap-2">
+          <span className={`h-3 w-3 rounded-full ${window.accent}`} />
+          <h2 className="text-sm font-bold text-[#eafff1]">{window.title}</h2>
+        </div>
+        <button
+          className="window-action hover:bg-[#1f7a4a]/25"
+          title="Close"
+          onClick={() => onClose(window.id)}
+        >
+          <X size={14} />
+        </button>
+      </header>
+      <div className="min-h-0 flex-1 overflow-auto p-4">{content}</div>
+    </article>
   );
 }
 
