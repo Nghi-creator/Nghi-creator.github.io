@@ -1,0 +1,48 @@
+# Nicholas Nguyen | CreatorOS
+
+CreatorOS is my interactive portfolio: a personal desktop-style web page where each part of my profile opens like an app.
+
+Live site: https://nghi-creator.github.io/
+
+## What It Shows
+
+- Profile, resume, education, certifications, experience, projects, skill map, terminal, and contact apps.
+- A looping cinematic landing page with a short boot sequence into the desktop.
+- Movable, resizable, persistent windows on desktop.
+- A mobile fallback app drawer for smaller screens.
+- Optimized video backgrounds with poster fallbacks for faster first paint.
+
+## Tech Stack
+
+- Vite
+- React
+- TypeScript
+- Tailwind CSS
+- Lucide React
+- GitHub Pages
+
+## Portfolio Blurb
+
+I built CreatorOS as a less generic developer portfolio: instead of listing my name and skills on a static page, it behaves like a tiny personal operating system. Visitors can open apps for my resume, projects, skills, experience, education, certifications, terminal, and contact links.
+
+## Share Checklist
+
+- Add the live site to LinkedIn Featured.
+- Add the live site to LinkedIn contact info.
+- Add the live site to the GitHub profile README.
+- Add the live site to Dev.to profile links.
+- Add the live site to project READMEs for PIXELATED Studio and PIXELATED User.
+- Add one screenshot or short GIF preview once the final visual pass is locked.
+
+## Local Development
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+```
