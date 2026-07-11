@@ -2,13 +2,11 @@ import {
   FormEvent,
   KeyboardEvent,
   PointerEvent as ReactPointerEvent,
-  ReactNode,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
-import { X } from "lucide-react";
 import { MediaBackdrop } from "../components/MediaBackdrop";
 import { CertificationsApp } from "../components/apps/CertificationsApp";
 import { ContactApp } from "../components/apps/ContactApp";
@@ -24,7 +22,10 @@ import { CommandPalette } from "../components/os/CommandPalette";
 import { OSWindow } from "../components/os/OSWindow";
 import { Taskbar } from "../components/os/Taskbar";
 import { TopBar } from "../components/os/TopBar";
+import { MobilePortfolio } from "../components/mobile/MobilePortfolio";
 import {
+  appIdFromPath,
+  appRoutes,
   createWindowState,
   defaultWindows,
   skills,
@@ -88,13 +89,6 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
   const dragState = useRef<DragState | null>(null);
 
   const topZ = useMemo(() => Math.max(...windows.map((window) => window.z)), [windows]);
-  const activeMobileWindow = useMemo(
-    () =>
-      windows
-        .filter((window) => window.open)
-        .sort((left, right) => right.z - left.z)[0] ?? null,
-    [windows],
-  );
 
   useEffect(() => {
     window.localStorage.setItem(WINDOW_LAYOUT_STORAGE_KEY, JSON.stringify(windows));
@@ -106,9 +100,12 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
   }, []);
 
   useEffect(() => {
-    const requestedApp = new URLSearchParams(window.location.search).get("app") as AppId | null;
+    const requestedApp = appIdFromPath(window.location.pathname);
     if (requestedApp && defaultWindows.some((item) => item.id === requestedApp)) {
       openWindow(requestedApp);
+      if (window.innerWidth < 1024) {
+        window.setTimeout(() => document.getElementById(appRoutes[requestedApp])?.scrollIntoView(), 0);
+      }
     }
     // The initial deep link is intentionally handled once on desktop boot.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -179,9 +176,7 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
   }, []);
 
   function openWindow(id: AppId) {
-    const url = new URL(window.location.href);
-    url.searchParams.set("app", id);
-    window.history.replaceState({}, "", url);
+    window.history.replaceState({}, "", `/${appRoutes[id]}`);
     setWindows((current) => {
       const nextZ = Math.max(...current.map((window) => window.z), topZ) + 1;
       const hasWindow = current.some((window) => window.id === id);
@@ -216,10 +211,8 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
           : window,
       ),
     );
-    const url = new URL(window.location.href);
-    if (url.searchParams.get("app") === id) {
-      url.searchParams.delete("app");
-      window.history.replaceState({}, "", url);
+    if (appIdFromPath(window.location.pathname) === id) {
+      window.history.replaceState({}, "", "/");
     }
   }
 
@@ -323,8 +316,9 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
   }
 
   return (
-    <main className="min-h-screen overflow-hidden bg-black text-white">
-      <div className="relative min-h-screen bg-black">
+    <main className="min-h-screen bg-black text-white">
+      <MobilePortfolio selectedSkill={selectedSkill} onSelectSkill={setSelectedSkill} onBack={onBack} />
+      <div className="relative hidden min-h-screen overflow-hidden bg-black lg:block">
         <div className="absolute inset-0 bg-black" />
         <MediaBackdrop
           className="absolute inset-0 h-full w-full object-cover object-center opacity-95 [image-rendering:auto]"
@@ -341,24 +335,7 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
             selectedApp={selectedDesktopApp}
             onSelect={setSelectedDesktopApp}
             onOpen={launchWindow}
-            onMobileOpen={launchWindow}
           />
-
-          {activeMobileWindow ? (
-            <MobileAppPanel
-              window={activeMobileWindow}
-              onClose={closeWindow}
-              content={renderWindowContent(activeMobileWindow, {
-                selectedSkill,
-                setSelectedSkill,
-                terminalLines,
-                terminalInput,
-                setTerminalInput,
-                submitTerminal,
-                handleTerminalKey,
-              })}
-            />
-          ) : null}
 
           <div className="hidden lg:contents">
             {windows.map((window) =>
@@ -404,35 +381,6 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
         />
       </div>
     </main>
-  );
-}
-
-function MobileAppPanel({
-  window,
-  onClose,
-  content,
-}: {
-  window: WindowState;
-  onClose: (id: AppId) => void;
-  content: ReactNode;
-}) {
-  return (
-    <article className="mt-6 flex max-h-[calc(100vh-16rem)] flex-col overflow-hidden rounded-lg border border-[#1f7a4a]/35 bg-[#06160e]/95 shadow-window backdrop-blur-2xl lg:hidden">
-      <header className="flex h-11 shrink-0 items-center justify-between border-b border-[#1f7a4a]/25 bg-[#071d12] px-3">
-        <div className="flex items-center gap-2">
-          <span className={`h-3 w-3 rounded-full ${window.accent}`} />
-          <h2 className="text-sm font-bold text-[#eafff1]">{window.title}</h2>
-        </div>
-        <button
-          className="window-action hover:bg-[#1f7a4a]/25"
-          title="Close"
-          onClick={() => onClose(window.id)}
-        >
-          <X size={14} />
-        </button>
-      </header>
-      <div className="min-h-0 flex-1 overflow-auto p-4">{content}</div>
-    </article>
   );
 }
 

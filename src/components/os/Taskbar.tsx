@@ -11,7 +11,7 @@ import {
   Wifi,
   X,
 } from "lucide-react";
-import { appMeta, desktopApps } from "../../data/profile";
+import { appMeta, taskbarApps } from "../../data/profile";
 import type { AppId } from "../../types";
 
 export function Taskbar({
@@ -48,18 +48,21 @@ export function Taskbar({
       <div aria-hidden="true" />
 
       <nav className="flex max-w-full gap-1 overflow-visible">
-        {desktopApps.map((id) => {
+        {taskbarApps.map((id) => {
           const Icon = appMeta[id].icon;
           return (
             <button
               key={id}
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1f7a4a] text-[#052416] shadow-sm ring-1 ring-[#9be7b3] transition hover:-translate-y-0.5 hover:bg-[#2b9a60] focus:outline-none focus:ring-2 focus:ring-[#9be7b3] ${
+              className={`group relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1f7a4a] text-[#052416] shadow-sm ring-1 ring-[#9be7b3] transition hover:-translate-y-0.5 hover:bg-[#2b9a60] focus:outline-none focus:ring-2 focus:ring-[#9be7b3] ${
                 bouncingApp === id ? "dock-bounce" : ""
               }`}
               onClick={() => openWindow(id)}
               title={appMeta[id].title}
             >
               <Icon size={20} />
+              <span className="pointer-events-none absolute bottom-12 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded bg-black/90 px-2 py-1 font-mono text-[10px] font-bold text-white shadow-lg group-hover:block group-focus:block">
+                {appMeta[id].title}
+              </span>
             </button>
           );
         })}

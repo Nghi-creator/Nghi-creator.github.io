@@ -1,10 +1,18 @@
 import { useState } from "react";
 import { DesktopPage } from "./pages/DesktopPage";
 import { LandingPage } from "./pages/LandingPage";
+import { appIdFromPath } from "./data/profile";
 
 function App() {
   const [hasEntered, setHasEntered] = useState(
-    () => new URLSearchParams(window.location.search).has("app"),
+    () => {
+      const redirectRoute = new URLSearchParams(window.location.search).get("route");
+      if (redirectRoute && appIdFromPath(`/${redirectRoute}`)) {
+        window.history.replaceState({}, "", `/${redirectRoute}`);
+        return true;
+      }
+      return appIdFromPath(window.location.pathname) !== null;
+    },
   );
 
   function returnToWelcome() {

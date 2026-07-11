@@ -20,5 +20,10 @@
       <p>This route is outside the mapped workspace. Return to Nicholas Nguyen's CreatorOS desktop.</p>
       <a href="/">Restore connection</a>
     </main>
+    <script>
+      var route = location.pathname.replace(/^\/+|\/+$/g, "");
+      var appRoutes = ["profile", "resume", "projects", "skills", "experience", "education", "certifications", "terminal", "contact"];
+      if (appRoutes.indexOf(route) !== -1) location.replace("/?route=" + encodeURIComponent(route));
+    </script>
   </body>
 </html>

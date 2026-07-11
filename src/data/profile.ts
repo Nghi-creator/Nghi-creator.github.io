@@ -60,6 +60,35 @@ export const desktopApps: AppId[] = [
   "terminal",
 ];
 
+export const taskbarApps: AppId[] = [
+  "projects",
+  "resume",
+  "contact",
+  "profile",
+  "experience",
+  "education",
+  "certifications",
+  "skills",
+  "terminal",
+];
+
+export const appRoutes: Record<AppId, string> = {
+  profile: "profile",
+  resume: "resume",
+  projects: "projects",
+  skills: "skills",
+  experience: "experience",
+  education: "education",
+  certifications: "certifications",
+  terminal: "terminal",
+  contact: "contact",
+};
+
+export function appIdFromPath(pathname: string): AppId | null {
+  const route = pathname.replace(/^\/+|\/+$/g, "");
+  return (Object.entries(appRoutes).find(([, value]) => value === route)?.[0] as AppId | undefined) ?? null;
+}
+
 export const windowMinimumSizes: Record<AppId, { width: number; height: number }> = {
   profile: { width: 460, height: 420 },
   resume: { width: 620, height: 520 },
@@ -77,7 +106,7 @@ export const defaultWindows: WindowState[] = [
     id: "profile",
     title: appMeta.profile.title,
     accent: appMeta.profile.accent,
-    open: false,
+    open: true,
     z: 12,
     maximized: false,
     animationKey: 0,
@@ -174,6 +203,10 @@ export const projects = [
     tag: "creator tooling",
     description:
       "A studio-side web application for building and managing pixelated experiences with a production-minded workflow.",
+    screenshot: "/pixelated-studio-preview.png",
+    stack: ["TypeScript", "React", "Supabase", "Vercel"],
+    responsibilities: ["Product architecture", "Full-stack implementation", "Release ownership"],
+    decision: "Split creator tooling from the user-facing application so each surface can evolve around its own workflow.",
     challenge: "Give creators a focused workspace for configuring and managing PIXELATED experiences.",
     build: "A TypeScript and React studio interface backed by production-minded workflows and separate user-facing delivery.",
     outcome: "Released as a versioned product with a live web app and an actively maintained public repository.",
@@ -191,6 +224,10 @@ export const projects = [
     tag: "user experience",
     description:
       "A user-facing companion web app focused on making the PIXELATED product experience accessible and direct.",
+    screenshot: "/pixelated-user-preview.png",
+    stack: ["TypeScript", "React", "Web APIs", "Vercel"],
+    responsibilities: ["Frontend architecture", "User experience", "Deployment"],
+    decision: "Keep the delivery client separate from Studio Edition to reduce coupling between authoring and playback concerns.",
     challenge: "Turn studio-authored experiences into a direct, approachable interface for end users.",
     build: "A separate React application that keeps the user experience independent from creator tooling.",
     outcome: "Deployed as a live companion product with its own public codebase and release surface.",

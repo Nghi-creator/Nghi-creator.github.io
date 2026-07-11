@@ -13,8 +13,10 @@ Live site: https://nghi-creator.github.io/
 - Profile, resume, education, certifications, experience, projects, skill map, terminal, and contact apps.
 - A looping cinematic landing page with a short boot sequence into the desktop.
 - Movable, resizable, persistent windows on desktop.
-- A mobile fallback app drawer for smaller screens.
+- A dedicated scrollable mobile portfolio for smaller screens.
 - Optimized video backgrounds with poster fallbacks for faster first paint.
+- Direct recruiter-friendly routes such as `/projects`, `/resume`, and `/contact`.
+- A downloadable one-page PDF resume and real product screenshots.
 
 ## Tech Stack
 

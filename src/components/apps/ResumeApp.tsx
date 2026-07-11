@@ -1,4 +1,4 @@
-import { Award, BriefcaseBusiness, ExternalLink, GraduationCap, Layers3 } from "lucide-react";
+import { Award, BriefcaseBusiness, Download, ExternalLink, GraduationCap, Layers3 } from "lucide-react";
 import {
   certifications,
   educationItems,
@@ -45,6 +45,13 @@ export function ResumeApp() {
           cloud infrastructure, low-latency systems, and products that feel
           practical enough to ship.
         </p>
+        <a
+          className="mt-4 inline-flex items-center gap-2 rounded-md bg-[#1f7a4a] px-3 py-2 text-xs font-black text-[#052416] transition hover:bg-[#2b9a60]"
+          href="/nicholas-nguyen-resume.pdf"
+          download
+        >
+          <Download size={14} /> Download one-page resume
+        </a>
       </section>
 
       <div className="grid gap-3 md:grid-cols-2">

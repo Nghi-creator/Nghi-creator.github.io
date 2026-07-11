@@ -6,6 +6,11 @@ export function ProjectsApp() {
     <div className="space-y-4">
       {projects.map((project) => (
         <article key={project.name} className="rounded-lg border border-white/10 bg-white/10 p-4">
+          <img
+            className="mb-4 aspect-video w-full rounded-md border border-white/10 bg-black/30 object-cover object-top"
+            src={project.screenshot}
+            alt={`${project.name} interface preview`}
+          />
           <div className="mb-2 flex items-center justify-between gap-3">
             <h3 className="text-lg font-black">{project.name}</h3>
             <span className="rounded-md bg-amber-200 px-2 py-1 text-xs font-bold text-slate-950">
@@ -27,6 +32,22 @@ export function ProjectsApp() {
               </div>
             ))}
           </dl>
+          <div className="mb-4 grid gap-3 sm:grid-cols-2">
+            <div>
+              <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-emerald-200/55">Stack</p>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {project.stack.map((item) => <span key={item} className="rounded bg-[#1f7a4a]/18 px-2 py-1 text-[11px] font-bold text-emerald-50">{item}</span>)}
+              </div>
+            </div>
+            <div>
+              <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-emerald-200/55">Responsibilities</p>
+              <p className="mt-2 text-xs leading-5 text-white/70">{project.responsibilities.join(" · ")}</p>
+            </div>
+          </div>
+          <div className="mb-4 border-l-2 border-[#1f7a4a] pl-3">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-emerald-200/55">Technical decision</p>
+            <p className="mt-1 text-sm leading-6 text-white/72">{project.decision}</p>
+          </div>
           <div className="flex flex-wrap gap-2">
             {project.links.map(([label, href]) => (
               <a
