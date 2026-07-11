@@ -13,6 +13,20 @@ export function ProjectsApp() {
             </span>
           </div>
           <p className="mb-3 text-sm leading-6 text-white/70">{project.description}</p>
+          <dl className="mb-4 grid gap-2 text-sm">
+            {[
+              ["Problem", project.challenge],
+              ["Build", project.build],
+              ["Outcome", project.outcome],
+            ].map(([label, value]) => (
+              <div key={label} className="rounded-md border border-white/8 bg-black/20 p-3">
+                <dt className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-emerald-200/55">
+                  {label}
+                </dt>
+                <dd className="mt-1 leading-6 text-white/72">{value}</dd>
+              </div>
+            ))}
+          </dl>
           <div className="flex flex-wrap gap-2">
             {project.links.map(([label, href]) => (
               <a

@@ -5,6 +5,7 @@ import {
   ChevronUp,
   Mic,
   Moon,
+  Search,
   Sun,
   Volume2,
   Wifi,
@@ -17,10 +18,16 @@ export function Taskbar({
   openWindow,
   now,
   bouncingApp,
+  onOpenSearch,
+  onCloseAll,
+  onResetWorkspace,
 }: {
   openWindow: (id: AppId) => void;
   now: Date;
   bouncingApp: AppId | null;
+  onOpenSearch: () => void;
+  onCloseAll: () => void;
+  onResetWorkspace: () => void;
 }) {
   const time = now.toLocaleTimeString([], {
     hour: "2-digit",
@@ -83,13 +90,33 @@ export function Taskbar({
         </div>
       </div>
       {systemPanelOpen && (
-        <CreatorPanel now={now} onClose={() => setSystemPanelOpen(false)} />
+        <CreatorPanel
+          now={now}
+          onClose={() => setSystemPanelOpen(false)}
+          onOpenSearch={onOpenSearch}
+          onOpenResume={() => openWindow("resume")}
+          onCloseAll={onCloseAll}
+          onResetWorkspace={onResetWorkspace}
+        />
       )}
     </footer>
   );
 }
 
-function CreatorPanel({ now, onClose }: { now: Date; onClose: () => void }) {
+function CreatorPanel({
+  onClose,
+  onOpenSearch,
+  onOpenResume,
+  onCloseAll,
+  onResetWorkspace,
+}: {
+  now: Date;
+  onClose: () => void;
+  onOpenSearch: () => void;
+  onOpenResume: () => void;
+  onCloseAll: () => void;
+  onResetWorkspace: () => void;
+}) {
   const message = "hey there, welcome to my portfolio.";
   const [typedText, setTypedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -168,6 +195,20 @@ function CreatorPanel({ now, onClose }: { now: Date; onClose: () => void }) {
             <p className="mt-1 text-xs font-black text-emerald-50">{value}</p>
           </div>
         ))}
+      </div>
+      <div className="grid grid-cols-2 gap-2 border-t border-white/10 pt-3">
+        <button className="flex items-center gap-2 rounded-md bg-[#1f7a4a]/18 px-3 py-2 text-xs font-black text-emerald-50 transition hover:bg-[#1f7a4a]/30" onClick={() => { onOpenSearch(); onClose(); }}>
+          <Search size={14} /> Search apps
+        </button>
+        <button className="rounded-md bg-[#1f7a4a]/18 px-3 py-2 text-left text-xs font-black text-emerald-50 transition hover:bg-[#1f7a4a]/30" onClick={() => { onOpenResume(); onClose(); }}>
+          Recruiter view
+        </button>
+        <button className="rounded-md px-3 py-2 text-left text-xs font-black text-white/55 transition hover:bg-white/10 hover:text-white" onClick={() => { onCloseAll(); onClose(); }}>
+          Close all windows
+        </button>
+        <button className="rounded-md px-3 py-2 text-left text-xs font-black text-white/55 transition hover:bg-white/10 hover:text-white" onClick={() => { onResetWorkspace(); onClose(); }}>
+          Reset workspace
+        </button>
       </div>
     </aside>
   );

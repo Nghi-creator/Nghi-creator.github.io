@@ -1,0 +1,16 @@
+{
+  "name": "Nicholas Nguyen | CreatorOS",
+  "short_name": "CreatorOS",
+  "description": "Nicholas Nguyen's interactive software engineering portfolio.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#052416",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

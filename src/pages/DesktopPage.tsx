@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { X } from "lucide-react";
+import { MediaBackdrop } from "../components/MediaBackdrop";
 import { CertificationsApp } from "../components/apps/CertificationsApp";
 import { ContactApp } from "../components/apps/ContactApp";
 import { EducationApp } from "../components/apps/EducationApp";
@@ -19,6 +20,7 @@ import { ResumeApp } from "../components/apps/ResumeApp";
 import { SkillsApp } from "../components/apps/SkillsApp";
 import { TerminalApp } from "../components/apps/TerminalApp";
 import { DesktopShortcuts } from "../components/os/DesktopShortcuts";
+import { CommandPalette } from "../components/os/CommandPalette";
 import { OSWindow } from "../components/os/OSWindow";
 import { Taskbar } from "../components/os/Taskbar";
 import { TopBar } from "../components/os/TopBar";
@@ -70,6 +72,7 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
   const [now, setNow] = useState(() => new Date());
   const [bouncingApp, setBouncingApp] = useState<AppId | null>(null);
   const [selectedDesktopApp, setSelectedDesktopApp] = useState<AppId | null>(null);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [terminalLines, setTerminalLines] = useState<string[]>([
     "CreatorOS terminal ready.",
     "Type help to list commands.",
@@ -94,6 +97,44 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
     const timer = window.setInterval(() => setNow(new Date()), 1000);
     return () => window.clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    const requestedApp = new URLSearchParams(window.location.search).get("app") as AppId | null;
+    if (requestedApp && defaultWindows.some((item) => item.id === requestedApp)) {
+      openWindow(requestedApp);
+    }
+    // The initial deep link is intentionally handled once on desktop boot.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    function handleKeyboard(event: globalThis.KeyboardEvent) {
+      const target = event.target as HTMLElement | null;
+      const isTyping = target?.tagName === "INPUT" || target?.tagName === "TEXTAREA";
+
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setCommandPaletteOpen((open) => !open);
+        return;
+      }
+
+      if (event.key === "Escape") {
+        if (commandPaletteOpen) {
+          setCommandPaletteOpen(false);
+          return;
+        }
+        const active = [...windows].filter((item) => item.open).sort((a, b) => b.z - a.z)[0];
+        if (active) closeWindow(active.id);
+      }
+
+      if (!isTyping && event.key === "Enter" && selectedDesktopApp) {
+        launchWindow(selectedDesktopApp);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyboard);
+    return () => window.removeEventListener("keydown", handleKeyboard);
+  }, [commandPaletteOpen, selectedDesktopApp, windows]);
 
   useEffect(() => {
     function handlePointerMove(event: PointerEvent) {
@@ -131,6 +172,9 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
   }, []);
 
   function openWindow(id: AppId) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("app", id);
+    window.history.replaceState({}, "", url);
     setWindows((current) => {
       const nextZ = Math.max(...current.map((window) => window.z), topZ) + 1;
       const hasWindow = current.some((window) => window.id === id);
@@ -165,6 +209,25 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
           : window,
       ),
     );
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("app") === id) {
+      url.searchParams.delete("app");
+      window.history.replaceState({}, "", url);
+    }
+  }
+
+  function closeAllWindows() {
+    setWindows((current) =>
+      current.map((item) => ({ ...item, open: false, maximized: false })),
+    );
+    window.history.replaceState({}, "", window.location.pathname);
+  }
+
+  function resetWorkspace() {
+    window.localStorage.removeItem(WINDOW_LAYOUT_STORAGE_KEY);
+    setWindows(defaultWindows.map((item) => ({ ...item })));
+    setSelectedDesktopApp(null);
+    window.history.replaceState({}, "", window.location.pathname);
   }
 
   function focusWindow(id: AppId) {
@@ -255,16 +318,10 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
     <main className="min-h-screen overflow-hidden bg-black text-white">
       <div className="relative min-h-screen bg-black">
         <div className="absolute inset-0 bg-black" />
-        <video
+        <MediaBackdrop
           className="absolute inset-0 h-full w-full object-cover object-center opacity-95 [image-rendering:auto]"
           src="/2001_space_web.mp4"
           poster="/2001_space_poster.jpg"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          aria-hidden="true"
         />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.08),transparent_30%),linear-gradient(90deg,rgba(0,0,0,0.5),rgba(0,0,0,0.02)_46%,rgba(0,0,0,0.68))]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.5))]" />
@@ -322,7 +379,21 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
           </div>
         </section>
 
-        <Taskbar openWindow={launchWindow} now={now} bouncingApp={bouncingApp} />
+        <Taskbar
+          openWindow={launchWindow}
+          now={now}
+          bouncingApp={bouncingApp}
+          onOpenSearch={() => setCommandPaletteOpen(true)}
+          onCloseAll={closeAllWindows}
+          onResetWorkspace={resetWorkspace}
+        />
+        <CommandPalette
+          open={commandPaletteOpen}
+          onClose={() => setCommandPaletteOpen(false)}
+          onOpenApp={launchWindow}
+          onCloseAll={closeAllWindows}
+          onResetWorkspace={resetWorkspace}
+        />
       </div>
     </main>
   );

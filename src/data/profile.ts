@@ -162,6 +162,9 @@ export const projects = [
     tag: "creator tooling",
     description:
       "A studio-side web application for building and managing pixelated experiences with a production-minded workflow.",
+    challenge: "Give creators a focused workspace for configuring and managing PIXELATED experiences.",
+    build: "A TypeScript and React studio interface backed by production-minded workflows and separate user-facing delivery.",
+    outcome: "Released as a versioned product with a live web app and an actively maintained public repository.",
     links: [
       [
         "Latest release",
@@ -176,6 +179,9 @@ export const projects = [
     tag: "user experience",
     description:
       "A user-facing companion web app focused on making the PIXELATED product experience accessible and direct.",
+    challenge: "Turn studio-authored experiences into a direct, approachable interface for end users.",
+    build: "A separate React application that keeps the user experience independent from creator tooling.",
+    outcome: "Deployed as a live companion product with its own public codebase and release surface.",
     links: [
       ["Web app", "https://pixelated-user-edition.vercel.app/"],
       ["Repo", "https://github.com/Nghi-creator/Pixelated-User-Edition"],

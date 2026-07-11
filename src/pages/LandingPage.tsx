@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { MediaBackdrop } from "../components/MediaBackdrop";
 
 const introLine = "hi, i am nicholas nguyen, glad to meet you";
 const bootLines = [
@@ -76,15 +77,10 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white">
-      <video
+      <MediaBackdrop
         className="absolute inset-0 h-full w-full object-cover"
         src="/2001_chimp_web.mp4"
         poster="/2001_chimp_poster.jpg"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
       />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.62),rgba(0,0,0,0.22)_38%,rgba(0,0,0,0.76))]" />
       <section className="relative z-10 flex min-h-screen flex-col items-center px-5 pt-14 text-center">
