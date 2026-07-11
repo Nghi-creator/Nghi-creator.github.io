@@ -4,6 +4,10 @@ CreatorOS is my interactive portfolio: a personal desktop-style web page where e
 
 Live site: https://nghi-creator.github.io/
 
+<p align="center">
+  <img src="public/creatoros-preview.png" alt="CreatorOS desktop preview" width="100%">
+</p>
+
 ## What It Shows
 
 - Profile, resume, education, certifications, experience, projects, skill map, terminal, and contact apps.
@@ -24,6 +28,12 @@ Live site: https://nghi-creator.github.io/
 ## Portfolio Blurb
 
 I built CreatorOS as a less generic developer portfolio: instead of listing my name and skills on a static page, it behaves like a tiny personal operating system. Visitors can open apps for my resume, projects, skills, experience, education, certifications, terminal, and contact links.
+
+## Short Share Copy
+
+CreatorOS is my interactive portfolio: a tiny personal operating system where visitors can open apps for my resume, projects, experience, education, certifications, skill map, terminal, and contact links.
+
+Visit: https://nghi-creator.github.io/
 
 ## Share Checklist
 
