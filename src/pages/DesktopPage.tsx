@@ -27,8 +27,42 @@ import {
 } from "../data/profile";
 import type { AppId, DragState, SkillNode, WindowState } from "../types";
 
+const WINDOW_LAYOUT_STORAGE_KEY = "creator-os-window-layout-v1";
+
+function readStoredWindows(): WindowState[] {
+  try {
+    const storedLayout = window.localStorage.getItem(WINDOW_LAYOUT_STORAGE_KEY);
+    if (!storedLayout) return defaultWindows;
+
+    const parsed = JSON.parse(storedLayout) as Partial<WindowState>[];
+    if (!Array.isArray(parsed)) return defaultWindows;
+
+    return defaultWindows.map((defaultWindow) => {
+      const storedWindow = parsed.find((window) => window.id === defaultWindow.id);
+      if (!storedWindow) return defaultWindow;
+
+      return {
+        ...defaultWindow,
+        open: Boolean(storedWindow.open),
+        z: typeof storedWindow.z === "number" ? storedWindow.z : defaultWindow.z,
+        maximized: Boolean(storedWindow.maximized),
+        animationKey:
+          typeof storedWindow.animationKey === "number"
+            ? storedWindow.animationKey
+            : defaultWindow.animationKey,
+        x: typeof storedWindow.x === "number" ? storedWindow.x : undefined,
+        y: typeof storedWindow.y === "number" ? storedWindow.y : undefined,
+        width: typeof storedWindow.width === "number" ? storedWindow.width : undefined,
+        height: typeof storedWindow.height === "number" ? storedWindow.height : undefined,
+      };
+    });
+  } catch {
+    return defaultWindows;
+  }
+}
+
 export function DesktopPage({ onBack }: { onBack: () => void }) {
-  const [windows, setWindows] = useState(defaultWindows);
+  const [windows, setWindows] = useState(readStoredWindows);
   const [selectedSkill, setSelectedSkill] = useState<SkillNode>(skills[0]);
   const [now, setNow] = useState(() => new Date());
   const [bouncingApp, setBouncingApp] = useState<AppId | null>(null);
@@ -41,6 +75,10 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
   const dragState = useRef<DragState | null>(null);
 
   const topZ = useMemo(() => Math.max(...windows.map((window) => window.z)), [windows]);
+
+  useEffect(() => {
+    window.localStorage.setItem(WINDOW_LAYOUT_STORAGE_KEY, JSON.stringify(windows));
+  }, [windows]);
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(new Date()), 1000);
@@ -113,7 +151,7 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
     setWindows((current) =>
       current.map((window) =>
         window.id === id
-          ? { ...window, open: false, maximized: false, x: undefined, y: undefined }
+          ? { ...window, open: false, maximized: false }
           : window,
       ),
     );
@@ -139,6 +177,20 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
             }
           : window,
       ),
+    );
+  }
+
+  function resizeWindow(id: AppId, size: { width: number; height: number }) {
+    setWindows((current) =>
+      current.map((window) => {
+        if (window.id !== id || window.maximized) return window;
+        const width = Math.round(size.width);
+        const height = Math.round(size.height);
+        const widthChanged = Math.abs((window.width ?? 0) - width) > 1;
+        const heightChanged = Math.abs((window.height ?? 0) - height) > 1;
+
+        return widthChanged || heightChanged ? { ...window, width, height } : window;
+      }),
     );
   }
 
@@ -224,6 +276,7 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
                 onFocus={focusWindow}
                 onToggleMaximize={toggleMaximize}
                 onStartDrag={startWindowDrag}
+                onResize={resizeWindow}
               >
                 {renderWindowContent(window, {
                   selectedSkill,

@@ -21,6 +21,8 @@ export type WindowState = {
   animationKey: number;
   x?: number;
   y?: number;
+  width?: number;
+  height?: number;
 };
 
 export type SkillNode = {
@@ -47,6 +49,11 @@ export type WindowDragHandler = (
   id: AppId,
   event: ReactPointerEvent<HTMLDivElement>,
   rect: DOMRect,
+) => void;
+
+export type WindowResizeHandler = (
+  id: AppId,
+  size: { width: number; height: number },
 ) => void;
 
 export type TerminalSubmitHandler = (event?: FormEvent) => void;
