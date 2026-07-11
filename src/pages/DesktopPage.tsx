@@ -15,6 +15,7 @@ import { EducationApp } from "../components/apps/EducationApp";
 import { ExperienceApp } from "../components/apps/ExperienceApp";
 import { ProfileApp } from "../components/apps/ProfileApp";
 import { ProjectsApp } from "../components/apps/ProjectsApp";
+import { ResumeApp } from "../components/apps/ResumeApp";
 import { SkillsApp } from "../components/apps/SkillsApp";
 import { TerminalApp } from "../components/apps/TerminalApp";
 import { DesktopShortcuts } from "../components/os/DesktopShortcuts";
@@ -256,7 +257,7 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
         <div className="absolute inset-0 bg-black" />
         <video
           className="absolute inset-0 h-full w-full object-cover object-center opacity-95 [image-rendering:auto]"
-          src="/2001_space.mp4"
+          src="/2001_space_web.mp4"
           poster="/2001_space_poster.jpg"
           autoPlay
           muted
@@ -371,6 +372,8 @@ function renderWindowContent(
   switch (window.id) {
     case "profile":
       return <ProfileApp />;
+    case "resume":
+      return <ResumeApp />;
     case "projects":
       return <ProjectsApp />;
     case "skills":

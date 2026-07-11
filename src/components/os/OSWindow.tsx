@@ -23,6 +23,7 @@ export function OSWindow({
   const articleRef = useRef<HTMLElement | null>(null);
   const dimensions: Record<AppId, string> = {
     profile: "lg:w-[500px] lg:h-[520px]",
+    resume: "lg:w-[660px] lg:h-[620px]",
     projects: "lg:w-[560px] lg:h-[560px]",
     skills: "lg:w-[760px] lg:h-[560px]",
     experience: "lg:w-[640px] lg:h-[440px]",

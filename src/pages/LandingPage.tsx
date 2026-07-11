@@ -78,7 +78,7 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
     <main className="relative min-h-screen overflow-hidden bg-black text-white">
       <video
         className="absolute inset-0 h-full w-full object-cover"
-        src="/2001_chimp.mp4"
+        src="/2001_chimp_web.mp4"
         poster="/2001_chimp_poster.jpg"
         autoPlay
         muted

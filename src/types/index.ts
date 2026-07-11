@@ -3,6 +3,7 @@ import type { LucideIcon } from "lucide-react";
 
 export type AppId =
   | "profile"
+  | "resume"
   | "projects"
   | "skills"
   | "experience"

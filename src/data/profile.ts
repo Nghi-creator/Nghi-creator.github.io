@@ -6,6 +6,7 @@ import {
   Code2,
   Cpu,
   Database,
+  FileText,
   GraduationCap,
   Layers3,
   Mail,
@@ -22,6 +23,7 @@ type AppIcon = ComponentType<SVGProps<SVGSVGElement> & { size?: number | string 
 
 export const appMeta = {
   profile: { title: "Profile", accent: "bg-[#1f7a4a]", icon: CircleUserRound },
+  resume: { title: "Resume", accent: "bg-[#1f7a4a]", icon: FileText },
   projects: { title: "Projects", accent: "bg-[#1f7a4a]", icon: ProjectFolderIcon },
   skills: { title: "Skill Map", accent: "bg-[#1f7a4a]", icon: Network },
   experience: {
@@ -48,6 +50,7 @@ export const appMeta = {
 
 export const desktopApps: AppId[] = [
   "profile",
+  "resume",
   "education",
   "certifications",
   "experience",
@@ -62,6 +65,15 @@ export const defaultWindows: WindowState[] = [
     id: "profile",
     title: appMeta.profile.title,
     accent: appMeta.profile.accent,
+    open: false,
+    z: 12,
+    maximized: false,
+    animationKey: 0,
+  },
+  {
+    id: "resume",
+    title: appMeta.resume.title,
+    accent: appMeta.resume.accent,
     open: false,
     z: 12,
     maximized: false,
@@ -294,7 +306,7 @@ export const skills: SkillNode[] = [
 ];
 
 export const terminalResponses: Record<string, string[]> = {
-  help: ["Commands: whoami, projects, skills, cloud, contact, clear"],
+  help: ["Commands: whoami, resume, projects, skills, cloud, contact, clear"],
   whoami: [
     "Nicholas Nguyen",
     "Aspiring software engineer focused on robust, scalable software.",
@@ -304,6 +316,9 @@ export const terminalResponses: Record<string, string[]> = {
     "PIXELATED Studio Edition",
     "PIXELATED User Edition",
     "Try: open the Projects window.",
+  ],
+  resume: [
+    "Open the Resume app for a recruiter-friendly scan of experience, education, certifications, stack, and links.",
   ],
   skills: [
     "TypeScript, React, Java, Express.js, PostgreSQL, MySQL, MongoDB, AWS, GCP, Docker, Terraform",
