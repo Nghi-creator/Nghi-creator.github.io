@@ -60,6 +60,18 @@ export const desktopApps: AppId[] = [
   "terminal",
 ];
 
+export const windowMinimumSizes: Record<AppId, { width: number; height: number }> = {
+  profile: { width: 460, height: 420 },
+  resume: { width: 620, height: 520 },
+  projects: { width: 520, height: 460 },
+  skills: { width: 760, height: 520 },
+  experience: { width: 600, height: 400 },
+  education: { width: 480, height: 340 },
+  certifications: { width: 520, height: 380 },
+  terminal: { width: 520, height: 380 },
+  contact: { width: 440, height: 360 },
+};
+
 export const defaultWindows: WindowState[] = [
   {
     id: "profile",

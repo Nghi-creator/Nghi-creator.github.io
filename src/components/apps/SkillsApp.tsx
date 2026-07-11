@@ -9,8 +9,8 @@ export function SkillsApp({
   onSelectSkill: (skill: SkillNode) => void;
 }) {
   return (
-    <div className="grid gap-4 lg:grid-cols-[1fr_210px]">
-      <div className="relative min-h-[360px] overflow-hidden rounded-lg border border-white/10 bg-[#09111f]/80">
+    <div className="grid gap-4 lg:min-w-[700px] lg:grid-cols-[minmax(440px,1fr)_240px]">
+      <div className="relative min-h-[380px] overflow-hidden rounded-lg border border-white/10 bg-[#09111f]/80 lg:min-h-[430px] lg:min-w-[440px]">
         <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
           {skills.flatMap((skill) =>
             skill.linksTo.map((targetId) => {

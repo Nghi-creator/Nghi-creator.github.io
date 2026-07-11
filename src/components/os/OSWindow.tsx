@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { useEffect, useRef } from "react";
 import { Maximize2, X } from "lucide-react";
 import type { AppId, WindowDragHandler, WindowResizeHandler, WindowState } from "../../types";
+import { windowMinimumSizes } from "../../data/profile";
 
 export function OSWindow({
   window,
@@ -34,17 +35,20 @@ export function OSWindow({
   };
   const hasPosition = typeof window.x === "number" && typeof window.y === "number";
   const hasSize = typeof window.width === "number" && typeof window.height === "number";
+  const minimumSize = windowMinimumSizes[window.id];
   const windowMode = window.maximized
     ? "fixed inset-0 mt-0 w-auto max-w-none max-h-none rounded-none resize-none"
     : hasPosition
-      ? `relative mt-6 w-full lg:fixed lg:left-[var(--window-x)] lg:top-[var(--window-y)] lg:mt-0 lg:translate-x-0 lg:translate-y-0 ${hasSize ? "lg:h-[var(--window-height)] lg:w-[var(--window-width)]" : dimensions[window.id]} lg:min-h-[320px] lg:min-w-[360px] lg:max-h-[calc(100vh-7rem)] lg:max-w-[calc(100vw-2rem)] lg:resize`
-      : `relative mt-6 w-full lg:fixed lg:left-1/2 lg:top-1/2 lg:mt-0 lg:-translate-x-1/2 lg:-translate-y-1/2 ${hasSize ? "lg:h-[var(--window-height)] lg:w-[var(--window-width)]" : dimensions[window.id]} lg:min-h-[320px] lg:min-w-[360px] lg:max-h-[calc(100vh-7rem)] lg:max-w-[calc(100vw-2rem)] lg:resize`;
+      ? `relative mt-6 w-full lg:fixed lg:left-[var(--window-x)] lg:top-[var(--window-y)] lg:mt-0 lg:translate-x-0 lg:translate-y-0 ${hasSize ? "lg:h-[var(--window-height)] lg:w-[var(--window-width)]" : dimensions[window.id]} lg:min-h-[var(--window-min-height)] lg:min-w-[var(--window-min-width)] lg:max-h-[calc(100vh-7rem)] lg:max-w-[calc(100vw-2rem)] lg:resize`
+      : `relative mt-6 w-full lg:fixed lg:left-1/2 lg:top-1/2 lg:mt-0 lg:-translate-x-1/2 lg:-translate-y-1/2 ${hasSize ? "lg:h-[var(--window-height)] lg:w-[var(--window-width)]" : dimensions[window.id]} lg:min-h-[var(--window-min-height)] lg:min-w-[var(--window-min-width)] lg:max-h-[calc(100vh-7rem)] lg:max-w-[calc(100vw-2rem)] lg:resize`;
   const windowStyle = {
     zIndex: window.maximized ? 80 + window.z : window.z,
     "--window-x": `${window.x ?? 0}px`,
     "--window-y": `${window.y ?? 0}px`,
     "--window-width": `${window.width ?? 0}px`,
     "--window-height": `${window.height ?? 0}px`,
+    "--window-min-width": `${minimumSize.width}px`,
+    "--window-min-height": `${minimumSize.height}px`,
   } as CSSProperties;
   const windowSurface = window.maximized
     ? "border-[#1f7a4a]/40 bg-[#06160e] shadow-2xl"
@@ -67,7 +71,7 @@ export function OSWindow({
   return (
     <article
       ref={articleRef}
-      className={`window-pop flex flex-col overflow-hidden rounded-lg border ${windowSurface} ${windowMode}`}
+      className={`flex flex-col overflow-hidden rounded-lg border ${windowSurface} ${windowMode}`}
       style={windowStyle}
       data-window-mode={window.maximized ? "maximized" : hasPosition ? "positioned" : "floating"}
       onMouseDown={() => onFocus(window.id)}

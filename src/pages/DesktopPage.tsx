@@ -29,6 +29,7 @@ import {
   defaultWindows,
   skills,
   terminalResponses,
+  windowMinimumSizes,
 } from "../data/profile";
 import type { AppId, DragState, SkillNode, WindowState } from "../types";
 
@@ -45,6 +46,12 @@ function readStoredWindows(): WindowState[] {
     return defaultWindows.map((defaultWindow) => {
       const storedWindow = parsed.find((window) => window.id === defaultWindow.id);
       if (!storedWindow) return defaultWindow;
+      const minimum = windowMinimumSizes[defaultWindow.id];
+      const storedWidth = typeof storedWindow.width === "number" ? storedWindow.width : undefined;
+      const storedHeight = typeof storedWindow.height === "number" ? storedWindow.height : undefined;
+      const invalidStoredSize =
+        (storedWidth !== undefined && storedWidth < minimum.width) ||
+        (storedHeight !== undefined && storedHeight < minimum.height);
 
       return {
         ...defaultWindow,
@@ -55,10 +62,10 @@ function readStoredWindows(): WindowState[] {
           typeof storedWindow.animationKey === "number"
             ? storedWindow.animationKey
             : defaultWindow.animationKey,
-        x: typeof storedWindow.x === "number" ? storedWindow.x : undefined,
-        y: typeof storedWindow.y === "number" ? storedWindow.y : undefined,
-        width: typeof storedWindow.width === "number" ? storedWindow.width : undefined,
-        height: typeof storedWindow.height === "number" ? storedWindow.height : undefined,
+        x: !invalidStoredSize && typeof storedWindow.x === "number" ? storedWindow.x : undefined,
+        y: !invalidStoredSize && typeof storedWindow.y === "number" ? storedWindow.y : undefined,
+        width: storedWidth === undefined ? undefined : Math.max(storedWidth, minimum.width),
+        height: storedHeight === undefined ? undefined : Math.max(storedHeight, minimum.height),
       };
     });
   } catch {
@@ -257,8 +264,9 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
     setWindows((current) =>
       current.map((window) => {
         if (window.id !== id || window.maximized) return window;
-        const width = Math.round(size.width);
-        const height = Math.round(size.height);
+        const minimum = windowMinimumSizes[id];
+        const width = Math.max(minimum.width, Math.round(size.width));
+        const height = Math.max(minimum.height, Math.round(size.height));
         const widthChanged = Math.abs((window.width ?? 0) - width) > 1;
         const heightChanged = Math.abs((window.height ?? 0) - height) > 1;
 
@@ -356,7 +364,7 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
             {windows.map((window) =>
               window.open ? (
                 <OSWindow
-                  key={`${window.id}-${window.animationKey}`}
+                  key={window.id}
                   window={window}
                   onClose={closeWindow}
                   onFocus={focusWindow}
