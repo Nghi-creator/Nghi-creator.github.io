@@ -18,7 +18,10 @@ const coreStack = [
   "AWS",
   "GCP",
   "Docker",
+  "Kubernetes",
+  "Helm",
   "Terraform",
+  "GitHub Actions",
 ];
 
 const links = [

@@ -39,10 +39,10 @@ export function ProfileApp() {
           value="SWE Intern @ TMA"
         />
         <InfoTile icon={GraduationCap} label="Education" value="HCMUS IT" />
-        <InfoTile icon={Award} label="Certifications" value="AWS + IELTS" />
+        <InfoTile icon={Award} label="Certifications" value="2x AWS + IELTS" />
         <InfoTile icon={Waves} label="Obsession" value="Low latency" />
-        <InfoTile icon={Settings2} label="Mode" value="Builder" />
-        <InfoTile icon={Globe2} label="Surface" value="Web + cloud" />
+        <InfoTile icon={Settings2} label="Platform" value="K8s + Helm" />
+        <InfoTile icon={Globe2} label="Delivery" value="GitHub Actions" />
       </div>
       <InfoGroup title="Top Skills" items={topSkills} />
     </div>

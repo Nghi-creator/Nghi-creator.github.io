@@ -239,9 +239,9 @@ export const projects = [
 ];
 
 export const topSkills = [
-  "Software Infrastructure",
+  "Cloud & Platform Engineering",
+  "Solution Architecture",
   "Full-Stack Development",
-  "Cloud Architecture",
 ];
 
 export const experienceItems = [
@@ -269,8 +269,8 @@ export const educationItems = [
 ];
 
 export const certifications = [
+  "AWS Certified Solutions Architect - Associate",
   "AWS Certified Cloud Practitioner",
-  "AWS Academy Graduate - Cloud Architecting - Training Badge",
   "IELTS Academic",
 ];
 
@@ -324,14 +324,22 @@ export const skills: SkillNode[] = [
   },
   {
     id: "cloud",
-    label: "Cloud",
+    label: "Cloud + Platform",
     detail:
-      "Infrastructure and latency-sensitive systems for demanding workloads.",
+      "Cloud-native infrastructure, delivery automation, and latency-sensitive systems for demanding workloads.",
     x: 80,
     y: 71,
     color: "bg-emerald-300 text-slate-950",
     icon: Cpu,
-    tools: ["AWS", "GCP", "Docker", "Terraform"],
+    tools: [
+      "AWS",
+      "GCP",
+      "Docker",
+      "Kubernetes",
+      "Helm",
+      "Terraform",
+      "GitHub Actions",
+    ],
     linksTo: ["architecture"],
   },
   {
@@ -376,10 +384,10 @@ export const terminalResponses: Record<string, string[]> = {
     "Open the Resume app for a recruiter-friendly scan of experience, education, certifications, stack, and links.",
   ],
   skills: [
-    "TypeScript, React, Java, Express.js, PostgreSQL, MySQL, MongoDB, AWS, GCP, Docker, Terraform",
+    "TypeScript, React, Java, Express.js, PostgreSQL, MySQL, MongoDB, AWS, GCP, Docker, Kubernetes, Helm, Terraform, GitHub Actions",
   ],
   cloud: [
-    "Domain focus: infrastructure as code, ultra-low latency, and raw cloud compute.",
+    "Domain focus: cloud-native infrastructure, delivery automation, ultra-low latency, and raw cloud compute.",
   ],
   contact: [
     "Dev.to: dev.to/nicholasthegreat",

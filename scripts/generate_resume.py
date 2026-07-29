@@ -187,7 +187,13 @@ skills_table = Table(
         [Paragraph("Languages", item_title_style), Paragraph("TypeScript, Java, SQL", body_style)],
         [Paragraph("Web", item_title_style), Paragraph("React, Node.js, Express.js, REST APIs", body_style)],
         [Paragraph("Data", item_title_style), Paragraph("PostgreSQL, MongoDB, Supabase", body_style)],
-        [Paragraph("Cloud & DevOps", item_title_style), Paragraph("AWS, GCP, Docker, Terraform", body_style)],
+        [
+            Paragraph("Cloud & Platform", item_title_style),
+            Paragraph(
+                "AWS, GCP, Docker, Kubernetes, Helm, Terraform, GitHub Actions",
+                body_style,
+            ),
+        ],
     ],
     colWidths=[36 * mm, 139 * mm],
 )
@@ -209,8 +215,8 @@ education_table = Table(
             Paragraph("Sep 2023 - May 2027", small_style),
         ],
         [
+            Paragraph("AWS Certified Solutions Architect - Associate", body_style),
             Paragraph("AWS Certified Cloud Practitioner", body_style),
-            Paragraph("AWS Academy Cloud Architecting", body_style),
             Paragraph("IELTS Academic", body_style),
         ],
     ]],
