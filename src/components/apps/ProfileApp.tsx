@@ -2,9 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   Award,
   Building2,
-  Globe2,
   GraduationCap,
-  Settings2,
   Waves,
 } from "lucide-react";
 import { topSkills } from "../../data/profile";
@@ -41,8 +39,6 @@ export function ProfileApp() {
         <InfoTile icon={GraduationCap} label="Education" value="HCMUS IT" />
         <InfoTile icon={Award} label="Certifications" value="2x AWS + IELTS" />
         <InfoTile icon={Waves} label="Obsession" value="Low latency" />
-        <InfoTile icon={Settings2} label="Platform" value="K8s + Helm" />
-        <InfoTile icon={Globe2} label="Delivery" value="GitHub Actions" />
       </div>
       <InfoGroup title="Top Skills" items={topSkills} />
     </div>

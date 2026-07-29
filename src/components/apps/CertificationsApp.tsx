@@ -1,4 +1,4 @@
-import { Award, BadgeCheck } from "lucide-react";
+import { Award, BadgeCheck, ExternalLink } from "lucide-react";
 import { certifications } from "../../data/profile";
 import { SectionTitle } from "./AppChrome";
 
@@ -9,7 +9,7 @@ export function CertificationsApp() {
       <div className="grid gap-3 sm:grid-cols-2">
         {certifications.map((certification, index) => (
           <article
-            key={certification}
+            key={certification.name}
             className={`group relative overflow-hidden rounded-lg border border-[#1f7a4a]/30 bg-[#1f7a4a]/12 p-4 transition hover:border-[#63c88e]/55 hover:bg-[#1f7a4a]/18 ${
               index === 0 ? "sm:col-span-2" : ""
             }`}
@@ -20,13 +20,20 @@ export function CertificationsApp() {
               </span>
               <div>
                 <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-emerald-200/50">
-                  {certification.startsWith("AWS")
-                    ? "Amazon Web Services"
-                    : "English proficiency"}
+                  {certification.issuer}
                 </p>
                 <h3 className="mt-1 text-sm font-black leading-5 text-emerald-50">
-                  {certification}
+                  {certification.name}
                 </h3>
+                <a
+                  className="mt-3 inline-flex items-center gap-1.5 text-xs font-black text-emerald-200/70 transition hover:text-emerald-100"
+                  href={certification.href}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {certification.action}
+                  <ExternalLink size={13} />
+                </a>
               </div>
             </div>
           </article>

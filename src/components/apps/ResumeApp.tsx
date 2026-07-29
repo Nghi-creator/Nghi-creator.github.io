@@ -28,6 +28,7 @@ const links = [
   ["GitHub", "https://github.com/Nghi-creator"],
   ["LinkedIn", "https://www.linkedin.com/in/nicholas-nguyen-3bb17a335/"],
   ["Dev.to", "https://dev.to/nicholasthegreat"],
+  ["Credly", "https://www.credly.com/earner/dashboard"],
   ["Email", "mailto:gianghi30032005@gmail.com"],
 ];
 
@@ -104,9 +105,16 @@ export function ResumeApp() {
           <SectionTitle icon={Award} title="Certifications" />
           <div className="space-y-2">
             {certifications.map((certification) => (
-              <p key={certification} className="text-sm font-bold text-white/75">
-                {certification}
-              </p>
+              <a
+                key={certification.name}
+                className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 text-sm font-bold text-white/75 transition hover:bg-white/5 hover:text-emerald-100"
+                href={certification.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {certification.name}
+                <ExternalLink className="shrink-0" size={13} />
+              </a>
             ))}
           </div>
         </section>

@@ -6,11 +6,13 @@ export function ProjectsApp() {
     <div className="space-y-4">
       {projects.map((project) => (
         <article key={project.name} className="rounded-lg border border-white/10 bg-white/10 p-4">
-          <img
-            className="mb-4 aspect-video w-full rounded-md border border-white/10 bg-black/30 object-cover object-top"
-            src={project.screenshot}
-            alt={`${project.name} interface preview`}
-          />
+          {"screenshot" in project && project.screenshot ? (
+            <img
+              className="mb-4 aspect-video w-full rounded-md border border-white/10 bg-black/30 object-cover object-top"
+              src={project.screenshot}
+              alt={`${project.name} interface preview`}
+            />
+          ) : null}
           <div className="mb-2 flex items-center justify-between gap-3">
             <h3 className="text-lg font-black">{project.name}</h3>
             <span className="rounded-md bg-amber-200 px-2 py-1 text-xs font-bold text-slate-950">

@@ -224,7 +224,6 @@ export const projects = [
     tag: "user experience",
     description:
       "A user-facing companion web app focused on making the PIXELATED product experience accessible and direct.",
-    screenshot: "/pixelated-user-preview.png",
     stack: ["TypeScript", "React", "Web APIs", "Vercel"],
     responsibilities: ["Frontend architecture", "User experience", "Deployment"],
     decision: "Keep the delivery client separate from Studio Edition to reduce coupling between authoring and playback concerns.",
@@ -269,9 +268,24 @@ export const educationItems = [
 ];
 
 export const certifications = [
-  "AWS Certified Solutions Architect - Associate",
-  "AWS Certified Cloud Practitioner",
-  "IELTS Academic",
+  {
+    name: "AWS Certified Solutions Architect - Associate",
+    issuer: "Amazon Web Services",
+    href: "https://www.credly.com/badges/578653c9-80bb-4751-9e67-0c372462e0f4/public_url",
+    action: "View badge",
+  },
+  {
+    name: "AWS Certified Cloud Practitioner",
+    issuer: "Amazon Web Services",
+    href: "https://www.credly.com/earner/earned/badge/f0b74d5c-5531-47e2-89b1-2d2cee4252be",
+    action: "View badge",
+  },
+  {
+    name: "IELTS Academic",
+    issuer: "British Council",
+    href: "/IELTS_ETRF.pdf",
+    action: "View certificate",
+  },
 ];
 
 export const skills: SkillNode[] = [
