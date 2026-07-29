@@ -1,4 +1,11 @@
-import { Award, BriefcaseBusiness, Download, ExternalLink, GraduationCap, Layers3 } from "lucide-react";
+import {
+  Award,
+  BriefcaseBusiness,
+  Download,
+  ExternalLink,
+  GraduationCap,
+  Layers3,
+} from "lucide-react";
 import {
   certifications,
   educationItems,
@@ -28,7 +35,7 @@ const links = [
   ["GitHub", "https://github.com/Nghi-creator"],
   ["LinkedIn", "https://www.linkedin.com/in/nicholas-nguyen-3bb17a335/"],
   ["Dev.to", "https://dev.to/nicholasthegreat"],
-  ["Credly", "https://www.credly.com/earner/dashboard"],
+  ["Credly", "https://www.credly.com/users/nghi-nguy-n-gia/edit/badges/credly"],
   ["Email", "mailto:gianghi30032005@gmail.com"],
 ];
 
@@ -45,9 +52,9 @@ export function ResumeApp() {
           Nicholas Nguyen
         </h2>
         <p className="mt-2 text-sm leading-6 text-white/72">
-          Aspiring software engineer focused on robust, scalable software,
-          cloud infrastructure, low-latency systems, and products that feel
-          practical enough to ship.
+          Aspiring software engineer focused on robust, scalable software, cloud
+          infrastructure, low-latency systems, and products that feel practical
+          enough to ship.
         </p>
         <a
           className="mt-4 inline-flex items-center gap-2 rounded-md bg-[#1f7a4a] px-3 py-2 text-xs font-black text-[#052416] transition hover:bg-[#2b9a60]"
@@ -78,7 +85,9 @@ export function ResumeApp() {
                 {item.dates}
               </p>
             </div>
-            <p className="mt-2 text-sm leading-6 text-white/70">{item.summary}</p>
+            <p className="mt-2 text-sm leading-6 text-white/70">
+              {item.summary}
+            </p>
           </article>
         ))}
       </section>

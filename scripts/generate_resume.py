@@ -119,7 +119,7 @@ header = Table(
             '<link href="https://github.com/Nghi-creator">github.com/Nghi-creator</link><br/>'
             '<link href="https://www.linkedin.com/in/nicholas-nguyen-3bb17a335/">LinkedIn</link> · '
             '<link href="https://dev.to/nicholasthegreat">Dev.to</link><br/>'
-            '<link href="https://www.credly.com/earner/dashboard">Credly</link>',
+            '<link href="https://www.credly.com/users/nghi-nguy-n-gia/edit/badges/credly">Credly</link>',
             contact_style,
         ),
     ]],
