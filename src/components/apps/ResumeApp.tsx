@@ -35,7 +35,7 @@ const links = [
   ["GitHub", "https://github.com/Nghi-creator"],
   ["LinkedIn", "https://www.linkedin.com/in/nicholas-nguyen-3bb17a335/"],
   ["Dev.to", "https://dev.to/nicholasthegreat"],
-  ["Credly", "https://www.credly.com/users/nghi-nguy-n-gia/edit/badges/credly"],
+  ["Credly", "https://www.credly.com/users/nghi-nguy-n-gia/badges/credly"],
   ["Email", "mailto:gianghi30032005@gmail.com"],
 ];
 
