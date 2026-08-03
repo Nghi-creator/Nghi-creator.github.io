@@ -5,13 +5,11 @@ import {
   Eye,
   ExternalLink,
   GraduationCap,
-  Layers3,
 } from "lucide-react";
 import {
   certifications,
   educationItems,
   experienceItems,
-  projects,
   topSkills,
 } from "../../data/profile";
 import { InfoGroup, SectionTitle } from "./AppChrome";
@@ -41,8 +39,6 @@ const links = [
 ];
 
 export function ResumeApp() {
-  const latestProject = projects[0];
-
   return (
     <div className="space-y-4">
       <section className="rounded-lg border border-[#1f7a4a]/25 bg-[#1f7a4a]/12 p-4">
@@ -60,18 +56,33 @@ export function ResumeApp() {
         <div className="mt-4 flex flex-wrap gap-2">
           <a
             className="inline-flex items-center gap-2 rounded-md border border-[#63c88e]/40 bg-[#1f7a4a]/15 px-3 py-2 text-xs font-black text-emerald-50 transition hover:bg-[#1f7a4a]/25"
-            href="/NicholasNguyen_resume.pdf"
+            href="/NguyenGiaNghi_Industry_CV.pdf"
             target="_blank"
             rel="noreferrer"
           >
-            <Eye size={14} /> View résumé
+            <Eye size={14} /> View industry résumé
           </a>
           <a
             className="inline-flex items-center gap-2 rounded-md bg-[#1f7a4a] px-3 py-2 text-xs font-black text-[#052416] transition hover:bg-[#2b9a60]"
-            href="/NicholasNguyen_resume.pdf"
+            href="/NguyenGiaNghi_Industry_CV.pdf"
             download
           >
-            <Download size={14} /> Download résumé
+            <Download size={14} /> Download industry résumé
+          </a>
+          <a
+            className="inline-flex items-center gap-2 rounded-md border border-sky-300/35 bg-sky-300/10 px-3 py-2 text-xs font-black text-sky-100 transition hover:bg-sky-300/20"
+            href="/NguyenGiaNghi_Academic_CV.pdf"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Eye size={14} /> View academic CV
+          </a>
+          <a
+            className="inline-flex items-center gap-2 rounded-md bg-sky-200 px-3 py-2 text-xs font-black text-sky-950 transition hover:bg-sky-100"
+            href="/NguyenGiaNghi_Academic_CV.pdf"
+            download
+          >
+            <Download size={14} /> Download academic CV
           </a>
         </div>
       </section>
@@ -139,16 +150,6 @@ export function ResumeApp() {
           </div>
         </section>
       </div>
-
-      <section className="rounded-lg border border-white/10 bg-white/10 p-4">
-        <SectionTitle icon={Layers3} title="Current product" />
-        <h3 className="mt-3 text-base font-black text-emerald-50">
-          {latestProject.name}
-        </h3>
-        <p className="mt-2 text-sm leading-6 text-white/70">
-          {latestProject.description}
-        </p>
-      </section>
 
       <div className="flex flex-wrap gap-2">
         {links.map(([label, href]) => (
