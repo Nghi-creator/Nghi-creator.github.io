@@ -51,7 +51,7 @@ export function MobilePortfolio({
           <div className="flex gap-2">
             <a
               className="flex h-9 w-9 items-center justify-center rounded-md bg-[#1f7a4a] text-[#052416]"
-              href="/nicholas-nguyen-resume.pdf"
+              href="/NicholasNguyen_resume.pdf"
               download
               title="Download resume"
             >
