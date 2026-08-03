@@ -2,6 +2,7 @@ import {
   Award,
   BriefcaseBusiness,
   Download,
+  Eye,
   ExternalLink,
   GraduationCap,
   Layers3,
@@ -56,13 +57,23 @@ export function ResumeApp() {
           infrastructure, low-latency systems, and products that feel practical
           enough to ship.
         </p>
-        <a
-          className="mt-4 inline-flex items-center gap-2 rounded-md bg-[#1f7a4a] px-3 py-2 text-xs font-black text-[#052416] transition hover:bg-[#2b9a60]"
-          href="/NicholasNguyen_resume.pdf"
-          download
-        >
-          <Download size={14} /> Download one-page resume
-        </a>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <a
+            className="inline-flex items-center gap-2 rounded-md border border-[#63c88e]/40 bg-[#1f7a4a]/15 px-3 py-2 text-xs font-black text-emerald-50 transition hover:bg-[#1f7a4a]/25"
+            href="/NicholasNguyen_resume.pdf"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Eye size={14} /> View résumé
+          </a>
+          <a
+            className="inline-flex items-center gap-2 rounded-md bg-[#1f7a4a] px-3 py-2 text-xs font-black text-[#052416] transition hover:bg-[#2b9a60]"
+            href="/NicholasNguyen_resume.pdf"
+            download
+          >
+            <Download size={14} /> Download résumé
+          </a>
+        </div>
       </section>
 
       <div className="grid gap-3 md:grid-cols-2">

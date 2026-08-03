@@ -199,17 +199,45 @@ export function createWindowState(id: AppId, z: number): WindowState {
 
 export const projects = [
   {
-    name: "PIXELATED Studio Edition",
-    tag: "creator tooling",
+    name: "PIXELATED Studio — Personal Edge Cloud",
+    tag: "edge cloud gaming",
     description:
-      "A studio-side web application for building and managing pixelated experiences with a production-minded workflow.",
+      "A working personal edge-cloud gaming platform that runs interactive workloads on a user-owned node and streams them to a lightweight browser client.",
     screenshot: "/pixelated-studio-preview.png",
-    stack: ["TypeScript", "React", "Supabase", "Vercel"],
-    responsibilities: ["Product architecture", "Full-stack implementation", "Release ownership"],
-    decision: "Split creator tooling from the user-facing application so each surface can evolve around its own workflow.",
-    challenge: "Give creators a focused workspace for configuring and managing PIXELATED experiences.",
-    build: "A TypeScript and React studio interface backed by production-minded workflows and separate user-facing delivery.",
-    outcome: "Released as a versioned product with a live web app and an actively maintained public repository.",
+    architecture: "/edge-cloud-architecture.webp",
+    architectureAlt: "Baseline personal edge cloud-gaming system architecture",
+    researchStatus:
+      "Thesis R&D: a cross-layer latency-fingerprinting engine is in development; evaluation results are not claimed yet.",
+    evidence: [
+      "4 deployable workspaces: React web client, Electron desktop orchestrator, Docker engine runtime, and Fastify hosted API",
+      "End-to-end compute → stream → input path using Docker, GStreamer, WebRTC, Socket.IO, and browser input",
+      "Current telemetry covers process health, CPU/memory, FPS, bitrate, jitter, packet loss, and connection state",
+      "Hosted, LAN, security, API, web, desktop, and engine checks are represented in the repository test and release gates",
+    ],
+    stack: [
+      "TypeScript",
+      "React",
+      "Electron",
+      "Docker",
+      "GStreamer",
+      "WebRTC",
+      "Fastify",
+      "Supabase",
+    ],
+    responsibilities: [
+      "Distributed systems architecture",
+      "Desktop and container runtime",
+      "WebRTC streaming and telemetry",
+      "Hosted control plane",
+    ],
+    decision:
+      "Keep compute and private workloads on a user-owned edge node while the hosted cloud handles identity, catalog metadata, and session policy.",
+    challenge:
+      "Turn an ordinary personal computer into a securely paired edge node for low-latency interactive workloads without requiring a datacenter GPU.",
+    build:
+      "A hosted control plane coordinates an Electron-managed Docker runtime; GStreamer captures and encodes the workload, WebRTC delivers media, and the browser returns keyboard or gamepad input.",
+    outcome:
+      "Delivered a functioning compute-stream-input research testbed. The next phase adds stage timing, bounded probes, fingerprint matching, and deadline-aware frame handling.",
     links: [
       [
         "Latest release",
@@ -224,6 +252,12 @@ export const projects = [
     tag: "user experience",
     description:
       "A user-facing companion web app focused on making the PIXELATED product experience accessible and direct.",
+    evidence: [
+      "3 playable systems in-browser: NES, Game Boy, and Game Boy Color",
+      "3 versioned local save-state slots per game with import and export",
+      "Personal ROM bytes remain in browser memory and are never uploaded by the User Edition",
+      "Installable PWA with offline caching for static runtime assets",
+    ],
     stack: ["TypeScript", "React", "Web APIs", "Vercel"],
     responsibilities: ["Frontend architecture", "User experience", "Deployment"],
     decision: "Keep the delivery client separate from Studio Edition to reduce coupling between authoring and playback concerns.",

@@ -3,6 +3,8 @@ import { DesktopPage } from "./pages/DesktopPage";
 import { LandingPage } from "./pages/LandingPage";
 import { appIdFromPath } from "./data/profile";
 
+const VISITED_STORAGE_KEY = "creator-os-visited-v1";
+
 function App() {
   const [hasEntered, setHasEntered] = useState(
     () => {
@@ -11,7 +13,15 @@ function App() {
         window.history.replaceState({}, "", `/${redirectRoute}`);
         return true;
       }
-      return appIdFromPath(window.location.pathname) !== null;
+      if (appIdFromPath(window.location.pathname) !== null) {
+        return true;
+      }
+
+      try {
+        return window.localStorage.getItem(VISITED_STORAGE_KEY) === "1";
+      } catch {
+        return false;
+      }
     },
   );
 
@@ -20,10 +30,19 @@ function App() {
     setHasEntered(false);
   }
 
+  function enterCreatorOS() {
+    try {
+      window.localStorage.setItem(VISITED_STORAGE_KEY, "1");
+    } catch {
+      // Storage can be unavailable in hardened or private browser contexts.
+    }
+    setHasEntered(true);
+  }
+
   return hasEntered ? (
     <DesktopPage onBack={returnToWelcome} />
   ) : (
-    <LandingPage onEnter={() => setHasEntered(true)} />
+    <LandingPage onEnter={enterCreatorOS} />
   );
 }
 

@@ -25,10 +25,10 @@ export function ProfileApp() {
         </div>
       </div>
       <p className="text-sm leading-6 text-white/70">
-        I want to build things that matter, grow into a serious engineer, and
-        yes, land the kind of six-figure role that rewards deep technical taste.
-        My current focus is latency, cloud compute, and building scalable
-        systems.
+        I build systems that connect product experience with the infrastructure
+        underneath it. My current focus is personal edge cloud gaming,
+        latency-sensitive media pipelines, and scalable software that is
+        practical enough to ship.
       </p>
       <div className="grid grid-cols-2 gap-3">
         <InfoTile

@@ -20,6 +20,29 @@ export function ProjectsApp() {
             </span>
           </div>
           <p className="mb-3 text-sm leading-6 text-white/70">{project.description}</p>
+          {"researchStatus" in project && project.researchStatus ? (
+            <p className="mb-4 rounded-md border border-amber-300/25 bg-amber-300/10 px-3 py-2 text-xs font-bold leading-5 text-amber-100/80">
+              {project.researchStatus}
+            </p>
+          ) : null}
+          {"architecture" in project && project.architecture ? (
+            <a
+              className="mb-4 block overflow-hidden rounded-md border border-white/10 bg-black/30 transition hover:border-cyan-200/35"
+              href={project.architecture}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                className="aspect-[2.07/1] w-full object-contain"
+                src={project.architecture}
+                alt={project.architectureAlt}
+                loading="lazy"
+              />
+              <span className="block border-t border-white/10 px-3 py-2 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-cyan-100/60">
+                Baseline architecture · Open full size
+              </span>
+            </a>
+          ) : null}
           <dl className="mb-4 grid gap-2 text-sm">
             {[
               ["Problem", project.challenge],
@@ -34,6 +57,19 @@ export function ProjectsApp() {
               </div>
             ))}
           </dl>
+          <div className="mb-4 rounded-md border border-cyan-200/15 bg-cyan-200/5 p-3">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-cyan-100/60">
+              Evidence
+            </p>
+            <ul className="mt-2 space-y-1.5 text-xs leading-5 text-white/72">
+              {project.evidence.map((item) => (
+                <li key={item} className="flex gap-2">
+                  <span className="text-cyan-200/65">•</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
           <div className="mb-4 grid gap-3 sm:grid-cols-2">
             <div>
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-emerald-200/55">Stack</p>
