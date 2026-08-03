@@ -30,6 +30,14 @@ const coreStack = [
   "GitHub Actions",
 ];
 
+const resumeFocus = [
+  ...topSkills,
+  "Computer Systems Performance",
+  "Distributed Systems & Coordination",
+  "Latency Diagnosis & Performance Evaluation",
+  "Internet Multimedia & Dependable Edge Services",
+];
+
 const links = [
   ["GitHub", "https://github.com/Nghi-creator"],
   ["LinkedIn", "https://www.linkedin.com/in/nicholas-nguyen-3bb17a335/"],
@@ -70,7 +78,7 @@ export function ResumeApp() {
             <Download size={14} /> Download industry résumé
           </a>
           <a
-            className="inline-flex items-center gap-2 rounded-md border border-sky-300/35 bg-sky-300/10 px-3 py-2 text-xs font-black text-sky-100 transition hover:bg-sky-300/20"
+            className="inline-flex items-center gap-2 rounded-md border border-[#63c88e]/40 bg-[#1f7a4a]/15 px-3 py-2 text-xs font-black text-emerald-50 transition hover:bg-[#1f7a4a]/25"
             href="/NguyenGiaNghi_Academic_CV.pdf"
             target="_blank"
             rel="noreferrer"
@@ -78,7 +86,7 @@ export function ResumeApp() {
             <Eye size={14} /> View academic CV
           </a>
           <a
-            className="inline-flex items-center gap-2 rounded-md bg-sky-200 px-3 py-2 text-xs font-black text-sky-950 transition hover:bg-sky-100"
+            className="inline-flex items-center gap-2 rounded-md bg-[#1f7a4a] px-3 py-2 text-xs font-black text-[#052416] transition hover:bg-[#2b9a60]"
             href="/NguyenGiaNghi_Academic_CV.pdf"
             download
           >
@@ -89,7 +97,7 @@ export function ResumeApp() {
 
       <div className="grid gap-3 md:grid-cols-2">
         <InfoGroup title="Core stack" items={coreStack} />
-        <InfoGroup title="Focus" items={topSkills} />
+        <InfoGroup title="Focus" items={resumeFocus} />
       </div>
 
       <section className="space-y-3 rounded-lg border border-white/10 bg-white/10 p-4">
