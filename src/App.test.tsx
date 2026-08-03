@@ -66,6 +66,30 @@ describe("CreatorOS routes and interactions", () => {
     await waitFor(() => expect(resumeWindow).toHaveFocus());
   });
 
+  it("starts with default windows instead of reopening the previous session", async () => {
+    window.localStorage.setItem(VISITED_STORAGE_KEY, "1");
+    window.localStorage.setItem(
+      WINDOW_LAYOUT_STORAGE_KEY,
+      JSON.stringify([
+        { id: "profile", open: false, maximized: true },
+        { id: "projects", open: true, maximized: true },
+        { id: "contact", open: true },
+      ]),
+    );
+    render(<App />);
+
+    expect(screen.getByRole("dialog", { name: "Profile" })).toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "Projects" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "Contact" })).not.toBeInTheDocument();
+
+    await waitFor(() => {
+      const savedLayout = JSON.parse(
+        window.localStorage.getItem(WINDOW_LAYOUT_STORAGE_KEY) ?? "[]",
+      ) as Array<Record<string, unknown>>;
+      expect(savedLayout.every((item) => !("open" in item) && !("maximized" in item))).toBe(true);
+    });
+  });
+
   it("traps command-palette focus and restores the opener after closing", async () => {
     const user = userEvent.setup();
     window.localStorage.setItem(VISITED_STORAGE_KEY, "1");

@@ -100,18 +100,10 @@ function readStoredWindows(): WindowState[] {
 
       return {
         ...defaultWindow,
-        open:
-          typeof storedWindow.open === "boolean" ? storedWindow.open : defaultWindow.open,
-        z: isFiniteNumber(storedWindow.z)
-          ? clamp(Math.round(storedWindow.z), 1, 10_000)
-          : defaultWindow.z,
-        maximized:
-          typeof storedWindow.maximized === "boolean"
-            ? storedWindow.maximized
-            : defaultWindow.maximized,
-        animationKey: isFiniteNumber(storedWindow.animationKey)
-          ? clamp(Math.round(storedWindow.animationKey), 0, 1_000_000)
-          : defaultWindow.animationKey,
+        open: defaultWindow.open,
+        z: defaultWindow.z,
+        maximized: false,
+        animationKey: defaultWindow.animationKey,
         x: hasStoredSize && isFiniteNumber(storedWindow.x)
           ? clamp(storedWindow.x, WINDOW_MARGIN, maxX)
           : undefined,
@@ -149,7 +141,14 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
   );
 
   useEffect(() => {
-    safeStorageSet(WINDOW_LAYOUT_STORAGE_KEY, JSON.stringify(windows));
+    const geometry = windows.map(({ id, x, y, width, height }) => ({
+      id,
+      x,
+      y,
+      width,
+      height,
+    }));
+    safeStorageSet(WINDOW_LAYOUT_STORAGE_KEY, JSON.stringify(geometry));
   }, [windows]);
 
   useEffect(() => {
