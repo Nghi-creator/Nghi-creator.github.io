@@ -2,6 +2,7 @@ import { useState } from "react";
 import { DesktopPage } from "./pages/DesktopPage";
 import { LandingPage } from "./pages/LandingPage";
 import { appIdFromPath } from "./data/profile";
+import { safeStorageGet, safeStorageSet } from "./lib/storage";
 
 const VISITED_STORAGE_KEY = "creator-os-visited-v1";
 
@@ -17,11 +18,7 @@ function App() {
         return true;
       }
 
-      try {
-        return window.localStorage.getItem(VISITED_STORAGE_KEY) === "1";
-      } catch {
-        return false;
-      }
+      return safeStorageGet(VISITED_STORAGE_KEY) === "1";
     },
   );
 
@@ -31,11 +28,7 @@ function App() {
   }
 
   function enterCreatorOS() {
-    try {
-      window.localStorage.setItem(VISITED_STORAGE_KEY, "1");
-    } catch {
-      // Storage can be unavailable in hardened or private browser contexts.
-    }
+    safeStorageSet(VISITED_STORAGE_KEY, "1");
     setHasEntered(true);
   }
 

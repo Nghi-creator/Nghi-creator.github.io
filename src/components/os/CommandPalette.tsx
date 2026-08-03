@@ -18,6 +18,8 @@ export function CommandPalette({
 }) {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   const matches = useMemo(
     () =>
       desktopApps.filter((id) =>
@@ -28,8 +30,16 @@ export function CommandPalette({
 
   useEffect(() => {
     if (!open) return;
+    previouslyFocusedRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setQuery("");
-    window.setTimeout(() => inputRef.current?.focus(), 0);
+    const focusTimer = window.setTimeout(() => inputRef.current?.focus(), 0);
+
+    return () => {
+      window.clearTimeout(focusTimer);
+      previouslyFocusedRef.current?.focus({ preventScroll: true });
+      previouslyFocusedRef.current = null;
+    };
   }, [open]);
 
   if (!open) return null;
@@ -40,11 +50,45 @@ export function CommandPalette({
       role="presentation"
       onMouseDown={(event) => event.target === event.currentTarget && onClose()}
     >
+      {/* A dialog must handle keyboard events at its boundary to trap focus. */}
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <section
+        ref={dialogRef}
         className="w-full max-w-xl overflow-hidden rounded-lg border border-[#1f7a4a]/45 bg-[#06160e]/98 shadow-[0_30px_100px_rgba(0,0,0,0.7)]"
         role="dialog"
         aria-modal="true"
         aria-label="CreatorOS command palette"
+        tabIndex={-1}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") {
+            event.preventDefault();
+            event.stopPropagation();
+            onClose();
+            return;
+          }
+
+          if (event.key !== "Tab") return;
+          const focusable = Array.from(
+            dialogRef.current?.querySelectorAll<HTMLElement>(
+              'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+            ) ?? [],
+          ).filter((element) => element.getAttribute("aria-hidden") !== "true");
+          if (!focusable.length) {
+            event.preventDefault();
+            dialogRef.current?.focus();
+            return;
+          }
+
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }}
       >
         <div className="flex items-center gap-3 border-b border-white/10 px-4">
           <Search size={18} className="text-emerald-200/65" />
@@ -55,7 +99,6 @@ export function CommandPalette({
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             onKeyDown={(event) => {
-              if (event.key === "Escape") onClose();
               if (event.key === "Enter" && matches[0]) {
                 onOpenApp(matches[0]);
                 onClose();

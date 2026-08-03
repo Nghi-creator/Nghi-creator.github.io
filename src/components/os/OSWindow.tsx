@@ -6,6 +6,7 @@ import { windowMinimumSizes } from "../../data/profile";
 
 export function OSWindow({
   window,
+  isActive,
   onClose,
   onFocus,
   onToggleMaximize,
@@ -14,6 +15,7 @@ export function OSWindow({
   children,
 }: {
   window: WindowState;
+  isActive: boolean;
   onClose: (id: AppId) => void;
   onFocus: (id: AppId) => void;
   onToggleMaximize: (id: AppId) => void;
@@ -22,6 +24,7 @@ export function OSWindow({
   children: ReactNode;
 }) {
   const articleRef = useRef<HTMLElement | null>(null);
+  const titleId = `creator-os-window-title-${window.id}`;
   const dimensions: Record<AppId, string> = {
     profile: "lg:w-[500px] lg:h-[520px]",
     resume: "lg:w-[660px] lg:h-[620px]",
@@ -68,13 +71,26 @@ export function OSWindow({
     return () => observer.disconnect();
   }, [onResize, window.id, window.maximized]);
 
+  useEffect(() => {
+    if (isActive) articleRef.current?.focus({ preventScroll: true });
+  }, [isActive, window.animationKey]);
+
   return (
+    // A desktop-style window is intentionally pointer-activated as one surface.
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <article
       ref={articleRef}
-      className={`flex flex-col overflow-hidden rounded-lg border ${windowSurface} ${windowMode}`}
+      className={`flex flex-col overflow-hidden rounded-lg border focus:outline-none ${windowSurface} ${windowMode}`}
       style={windowStyle}
       data-window-mode={window.maximized ? "maximized" : hasPosition ? "positioned" : "floating"}
-      onMouseDown={() => onFocus(window.id)}
+      onMouseDown={() => {
+        articleRef.current?.focus({ preventScroll: true });
+        onFocus(window.id);
+      }}
+      role="dialog"
+      aria-modal="false"
+      aria-labelledby={titleId}
+      tabIndex={-1}
     >
       <div
         className={`flex h-11 select-none items-center justify-between border-b border-[#1f7a4a]/25 bg-[#071d12] px-3 ${
@@ -89,7 +105,7 @@ export function OSWindow({
       >
         <div className="flex items-center gap-2">
           <span className={`h-3 w-3 rounded-full ${window.accent}`} />
-          <span className="text-sm font-bold text-[#eafff1]">{window.title}</span>
+          <span id={titleId} className="text-sm font-bold text-[#eafff1]">{window.title}</span>
         </div>
         <div className="flex items-center gap-1">
           <button

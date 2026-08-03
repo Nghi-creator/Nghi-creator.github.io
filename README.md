@@ -58,3 +58,16 @@ npm run dev
 ```bash
 npm run build
 ```
+
+## Quality checks
+
+```bash
+npm run lint
+npm test
+```
+
+The GitHub Pages workflow runs linting, interaction and route tests, and the production build before deployment.
+
+## Browser security policy
+
+The document applies a restrictive content security policy and `strict-origin-when-cross-origin` referrer policy through HTML metadata. GitHub Pages provides HTTPS/HSTS, but it does not provide repository-level custom response headers. A `Permissions-Policy` header—and stronger header-only CSP directives such as `frame-ancestors`—should be added if the site moves behind a host or proxy that supports custom headers.

@@ -33,8 +33,20 @@ import {
   windowMinimumSizes,
 } from "../data/profile";
 import type { AppId, DragState, SkillNode, WindowState } from "../types";
+import { safeStorageGet, safeStorageRemove, safeStorageSet } from "../lib/storage";
 
 const WINDOW_LAYOUT_STORAGE_KEY = "creator-os-window-layout-v1";
+const WINDOW_MARGIN = 8;
+const WINDOW_TOP_LIMIT = 42;
+const WINDOW_BOTTOM_LIMIT = 58;
+
+function isFiniteNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
+function clamp(value: number, minimum: number, maximum: number) {
+  return Math.min(Math.max(value, minimum), maximum);
+}
 
 function useDesktopLayout() {
   const [isDesktop, setIsDesktop] = useState(() =>
@@ -54,7 +66,7 @@ function useDesktopLayout() {
 
 function readStoredWindows(): WindowState[] {
   try {
-    const storedLayout = window.localStorage.getItem(WINDOW_LAYOUT_STORAGE_KEY);
+    const storedLayout = safeStorageGet(WINDOW_LAYOUT_STORAGE_KEY);
     if (!storedLayout) return defaultWindows;
 
     const parsed = JSON.parse(storedLayout) as Partial<WindowState>[];
@@ -64,25 +76,50 @@ function readStoredWindows(): WindowState[] {
       const storedWindow = parsed.find((window) => window.id === defaultWindow.id);
       if (!storedWindow) return defaultWindow;
       const minimum = windowMinimumSizes[defaultWindow.id];
-      const storedWidth = typeof storedWindow.width === "number" ? storedWindow.width : undefined;
-      const storedHeight = typeof storedWindow.height === "number" ? storedWindow.height : undefined;
-      const invalidStoredSize =
-        (storedWidth !== undefined && storedWidth < minimum.width) ||
-        (storedHeight !== undefined && storedHeight < minimum.height);
+      const maxWidth = Math.max(320, window.innerWidth - WINDOW_MARGIN * 2);
+      const maxHeight = Math.max(
+        240,
+        window.innerHeight - WINDOW_TOP_LIMIT - WINDOW_BOTTOM_LIMIT,
+      );
+      const minWidth = Math.min(minimum.width, maxWidth);
+      const minHeight = Math.min(minimum.height, maxHeight);
+      const width = isFiniteNumber(storedWindow.width)
+        ? clamp(storedWindow.width, minWidth, maxWidth)
+        : undefined;
+      const height = isFiniteNumber(storedWindow.height)
+        ? clamp(storedWindow.height, minHeight, maxHeight)
+        : undefined;
+      const positioningWidth = width ?? minWidth;
+      const positioningHeight = height ?? minHeight;
+      const hasStoredSize = width !== undefined && height !== undefined;
+      const maxX = Math.max(WINDOW_MARGIN, window.innerWidth - positioningWidth - WINDOW_MARGIN);
+      const maxY = Math.max(
+        WINDOW_TOP_LIMIT,
+        window.innerHeight - positioningHeight - WINDOW_BOTTOM_LIMIT,
+      );
 
       return {
         ...defaultWindow,
-        open: Boolean(storedWindow.open),
-        z: typeof storedWindow.z === "number" ? storedWindow.z : defaultWindow.z,
-        maximized: Boolean(storedWindow.maximized),
-        animationKey:
-          typeof storedWindow.animationKey === "number"
-            ? storedWindow.animationKey
-            : defaultWindow.animationKey,
-        x: !invalidStoredSize && typeof storedWindow.x === "number" ? storedWindow.x : undefined,
-        y: !invalidStoredSize && typeof storedWindow.y === "number" ? storedWindow.y : undefined,
-        width: storedWidth === undefined ? undefined : Math.max(storedWidth, minimum.width),
-        height: storedHeight === undefined ? undefined : Math.max(storedHeight, minimum.height),
+        open:
+          typeof storedWindow.open === "boolean" ? storedWindow.open : defaultWindow.open,
+        z: isFiniteNumber(storedWindow.z)
+          ? clamp(Math.round(storedWindow.z), 1, 10_000)
+          : defaultWindow.z,
+        maximized:
+          typeof storedWindow.maximized === "boolean"
+            ? storedWindow.maximized
+            : defaultWindow.maximized,
+        animationKey: isFiniteNumber(storedWindow.animationKey)
+          ? clamp(Math.round(storedWindow.animationKey), 0, 1_000_000)
+          : defaultWindow.animationKey,
+        x: hasStoredSize && isFiniteNumber(storedWindow.x)
+          ? clamp(storedWindow.x, WINDOW_MARGIN, maxX)
+          : undefined,
+        y: hasStoredSize && isFiniteNumber(storedWindow.y)
+          ? clamp(storedWindow.y, WINDOW_TOP_LIMIT, maxY)
+          : undefined,
+        width,
+        height,
       };
     });
   } catch {
@@ -106,9 +143,13 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
   const dragState = useRef<DragState | null>(null);
 
   const topZ = useMemo(() => Math.max(...windows.map((window) => window.z)), [windows]);
+  const activeWindowId = useMemo(
+    () => [...windows].filter((item) => item.open).sort((a, b) => b.z - a.z)[0]?.id ?? null,
+    [windows],
+  );
 
   useEffect(() => {
-    window.localStorage.setItem(WINDOW_LAYOUT_STORAGE_KEY, JSON.stringify(windows));
+    safeStorageSet(WINDOW_LAYOUT_STORAGE_KEY, JSON.stringify(windows));
   }, [windows]);
 
   useEffect(() => {
@@ -156,6 +197,8 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
 
     window.addEventListener("keydown", handleKeyboard);
     return () => window.removeEventListener("keydown", handleKeyboard);
+    // Window changes intentionally refresh the keyboard handler's action closures.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commandPaletteOpen, selectedDesktopApp, windows]);
 
   useEffect(() => {
@@ -163,13 +206,13 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
       const drag = dragState.current;
       if (!drag) return;
 
-      const margin = 8;
-      const topLimit = 42;
-      const bottomLimit = 58;
-      const maxX = Math.max(margin, window.innerWidth - drag.width - margin);
-      const maxY = Math.max(topLimit, window.innerHeight - drag.height - bottomLimit);
-      const nextX = Math.min(Math.max(event.clientX - drag.offsetX, margin), maxX);
-      const nextY = Math.min(Math.max(event.clientY - drag.offsetY, topLimit), maxY);
+      const maxX = Math.max(WINDOW_MARGIN, window.innerWidth - drag.width - WINDOW_MARGIN);
+      const maxY = Math.max(
+        WINDOW_TOP_LIMIT,
+        window.innerHeight - drag.height - WINDOW_BOTTOM_LIMIT,
+      );
+      const nextX = clamp(event.clientX - drag.offsetX, WINDOW_MARGIN, maxX);
+      const nextY = clamp(event.clientY - drag.offsetY, WINDOW_TOP_LIMIT, maxY);
 
       setWindows((current) =>
         current.map((window) =>
@@ -242,7 +285,7 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
   }
 
   function resetWorkspace() {
-    window.localStorage.removeItem(WINDOW_LAYOUT_STORAGE_KEY);
+    safeStorageRemove(WINDOW_LAYOUT_STORAGE_KEY);
     setWindows(defaultWindows.map((item) => ({ ...item })));
     setSelectedDesktopApp(null);
     window.history.replaceState({}, "", window.location.pathname);
@@ -333,16 +376,18 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
     if (event.key === "Enter") submitTerminal();
   }
 
+  if (!isDesktop) {
+    return (
+      <MobilePortfolio
+        selectedSkill={selectedSkill}
+        onSelectSkill={setSelectedSkill}
+        onBack={onBack}
+      />
+    );
+  }
+
   return (
-    <main className="min-h-screen bg-black text-white">
-      {!isDesktop ? (
-        <MobilePortfolio
-          selectedSkill={selectedSkill}
-          onSelectSkill={setSelectedSkill}
-          onBack={onBack}
-        />
-      ) : (
-      <div className="relative min-h-screen overflow-hidden bg-black">
+    <main className="relative min-h-screen overflow-hidden bg-black text-white">
         <div className="absolute inset-0 bg-black" />
         <SpaceBackdrop variant="desktop" className="absolute inset-0 opacity-95" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.08),transparent_30%),linear-gradient(90deg,rgba(0,0,0,0.5),rgba(0,0,0,0.02)_46%,rgba(0,0,0,0.68))]" />
@@ -363,6 +408,7 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
                 <OSWindow
                   key={window.id}
                   window={window}
+                  isActive={activeWindowId === window.id}
                   onClose={closeWindow}
                   onFocus={focusWindow}
                   onToggleMaximize={toggleMaximize}
@@ -399,8 +445,6 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
           onCloseAll={closeAllWindows}
           onResetWorkspace={resetWorkspace}
         />
-      </div>
-      )}
     </main>
   );
 }
