@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { MediaBackdrop } from "../components/MediaBackdrop";
+import { SpaceBackdrop } from "../components/SpaceBackdrop";
 import { CertificationsApp } from "../components/apps/CertificationsApp";
 import { ContactApp } from "../components/apps/ContactApp";
 import { EducationApp } from "../components/apps/EducationApp";
@@ -35,6 +35,22 @@ import {
 import type { AppId, DragState, SkillNode, WindowState } from "../types";
 
 const WINDOW_LAYOUT_STORAGE_KEY = "creator-os-window-layout-v1";
+
+function useDesktopLayout() {
+  const [isDesktop, setIsDesktop] = useState(() =>
+    window.matchMedia("(min-width: 1024px)").matches,
+  );
+
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 1024px)");
+    const updateLayout = (event: MediaQueryListEvent) => setIsDesktop(event.matches);
+    setIsDesktop(query.matches);
+    query.addEventListener("change", updateLayout);
+    return () => query.removeEventListener("change", updateLayout);
+  }, []);
+
+  return isDesktop;
+}
 
 function readStoredWindows(): WindowState[] {
   try {
@@ -75,6 +91,7 @@ function readStoredWindows(): WindowState[] {
 }
 
 export function DesktopPage({ onBack }: { onBack: () => void }) {
+  const isDesktop = useDesktopLayout();
   const [windows, setWindows] = useState(readStoredWindows);
   const [selectedSkill, setSelectedSkill] = useState<SkillNode>(skills[0]);
   const [now, setNow] = useState(() => new Date());
@@ -95,9 +112,10 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
   }, [windows]);
 
   useEffect(() => {
+    if (!isDesktop) return;
     const timer = window.setInterval(() => setNow(new Date()), 1000);
     return () => window.clearInterval(timer);
-  }, []);
+  }, [isDesktop]);
 
   useEffect(() => {
     const requestedApp = appIdFromPath(window.location.pathname);
@@ -317,14 +335,16 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
 
   return (
     <main className="min-h-screen bg-black text-white">
-      <MobilePortfolio selectedSkill={selectedSkill} onSelectSkill={setSelectedSkill} onBack={onBack} />
-      <div className="relative hidden min-h-screen overflow-hidden bg-black lg:block">
-        <div className="absolute inset-0 bg-black" />
-        <MediaBackdrop
-          className="absolute inset-0 h-full w-full object-cover object-center opacity-95 [image-rendering:auto]"
-          src="/2001_space_web.mp4"
-          poster="/2001_space_poster.jpg"
+      {!isDesktop ? (
+        <MobilePortfolio
+          selectedSkill={selectedSkill}
+          onSelectSkill={setSelectedSkill}
+          onBack={onBack}
         />
+      ) : (
+      <div className="relative min-h-screen overflow-hidden bg-black">
+        <div className="absolute inset-0 bg-black" />
+        <SpaceBackdrop variant="desktop" className="absolute inset-0 opacity-95" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.08),transparent_30%),linear-gradient(90deg,rgba(0,0,0,0.5),rgba(0,0,0,0.02)_46%,rgba(0,0,0,0.68))]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.5))]" />
 
@@ -380,6 +400,7 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
           onResetWorkspace={resetWorkspace}
         />
       </div>
+      )}
     </main>
   );
 }

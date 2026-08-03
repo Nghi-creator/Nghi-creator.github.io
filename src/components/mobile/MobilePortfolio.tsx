@@ -6,11 +6,13 @@ import { EducationApp } from "../apps/EducationApp";
 import { ExperienceApp } from "../apps/ExperienceApp";
 import { ProfileApp } from "../apps/ProfileApp";
 import { ProjectsApp } from "../apps/ProjectsApp";
+import { ResumeApp } from "../apps/ResumeApp";
 import { SkillsApp } from "../apps/SkillsApp";
 import type { SkillNode } from "../../types";
 
 const sections = [
   ["profile", "Profile"],
+  ["resume", "Resume"],
   ["projects", "Projects"],
   ["experience", "Experience"],
   ["skills", "Skills"],
@@ -81,6 +83,7 @@ export function MobilePortfolio({
 
       <main>
         <MobileSection id="profile" title="Profile"><ProfileApp /></MobileSection>
+        <MobileSection id="resume" title="Recruiter view"><ResumeApp /></MobileSection>
         <MobileSection id="projects" title="Selected projects"><ProjectsApp /></MobileSection>
         <MobileSection id="experience" title="Experience"><ExperienceApp /></MobileSection>
         <MobileSection id="skills" title="Skill map">

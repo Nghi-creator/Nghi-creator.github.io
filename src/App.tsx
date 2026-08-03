@@ -16,7 +16,7 @@ function App() {
   );
 
   function returnToWelcome() {
-    window.history.replaceState({}, "", window.location.pathname);
+    window.history.replaceState({}, "", "/");
     setHasEntered(false);
   }
 
