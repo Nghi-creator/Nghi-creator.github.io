@@ -15,7 +15,6 @@ import { ExperienceApp } from "../components/apps/ExperienceApp";
 import { ProfileApp } from "../components/apps/ProfileApp";
 import { ProjectsApp } from "../components/apps/ProjectsApp";
 import { ResumeApp } from "../components/apps/ResumeApp";
-import { SkillsApp } from "../components/apps/SkillsApp";
 import { TerminalApp } from "../components/apps/TerminalApp";
 import { DesktopShortcuts } from "../components/os/DesktopShortcuts";
 import { CommandPalette } from "../components/os/CommandPalette";
@@ -28,12 +27,18 @@ import {
   appRoutes,
   createWindowState,
   defaultWindows,
-  skills,
   terminalResponses,
   windowMinimumSizes,
 } from "../data/profile";
-import type { AppId, DragState, SkillNode, WindowState } from "../types";
+import type {
+  AppId,
+  DragState,
+  ResizeState,
+  WindowResizeDirection,
+  WindowState,
+} from "../types";
 import { safeStorageGet, safeStorageRemove, safeStorageSet } from "../lib/storage";
+import { calculateResizedWindow } from "../lib/windowGeometry";
 
 const WINDOW_LAYOUT_STORAGE_KEY = "creator-os-window-layout-v1";
 const WINDOW_MARGIN = 8;
@@ -122,7 +127,6 @@ function readStoredWindows(): WindowState[] {
 export function DesktopPage({ onBack }: { onBack: () => void }) {
   const isDesktop = useDesktopLayout();
   const [windows, setWindows] = useState(readStoredWindows);
-  const [selectedSkill, setSelectedSkill] = useState<SkillNode>(skills[0]);
   const [now, setNow] = useState(() => new Date());
   const [bouncingApp, setBouncingApp] = useState<AppId | null>(null);
   const [selectedDesktopApp, setSelectedDesktopApp] = useState<AppId | null>(null);
@@ -133,6 +137,7 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
   ]);
   const [terminalInput, setTerminalInput] = useState("");
   const dragState = useRef<DragState | null>(null);
+  const resizeState = useRef<ResizeState | null>(null);
 
   const topZ = useMemo(() => Math.max(...windows.map((window) => window.z)), [windows]);
   const activeWindowId = useMemo(
@@ -202,6 +207,30 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
 
   useEffect(() => {
     function handlePointerMove(event: PointerEvent) {
+      const resize = resizeState.current;
+      if (resize) {
+        const minimum = windowMinimumSizes[resize.id];
+        const bounds = calculateResizedWindow(
+          resize,
+          { x: event.clientX, y: event.clientY },
+          {
+            bottomLimit: WINDOW_BOTTOM_LIMIT,
+            margin: WINDOW_MARGIN,
+            minimumHeight: minimum.height,
+            minimumWidth: minimum.width,
+            topLimit: WINDOW_TOP_LIMIT,
+            viewportHeight: window.innerHeight,
+            viewportWidth: window.innerWidth,
+          },
+        );
+        setWindows((current) =>
+          current.map((item) =>
+            item.id === resize.id ? { ...item, ...bounds } : item,
+          ),
+        );
+        return;
+      }
+
       const drag = dragState.current;
       if (!drag) return;
 
@@ -222,6 +251,9 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
 
     function handlePointerUp() {
       dragState.current = null;
+      resizeState.current = null;
+      document.body.style.removeProperty("cursor");
+      document.body.style.removeProperty("user-select");
     }
 
     window.addEventListener("pointermove", handlePointerMove);
@@ -313,21 +345,6 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
     );
   }
 
-  function resizeWindow(id: AppId, size: { width: number; height: number }) {
-    setWindows((current) =>
-      current.map((window) => {
-        if (window.id !== id || window.maximized) return window;
-        const minimum = windowMinimumSizes[id];
-        const width = Math.max(minimum.width, Math.round(size.width));
-        const height = Math.max(minimum.height, Math.round(size.height));
-        const widthChanged = Math.abs((window.width ?? 0) - width) > 1;
-        const heightChanged = Math.abs((window.height ?? 0) - height) > 1;
-
-        return widthChanged || heightChanged ? { ...window, width, height } : window;
-      }),
-    );
-  }
-
   function startWindowDrag(
     id: AppId,
     event: ReactPointerEvent<HTMLDivElement>,
@@ -348,6 +365,45 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
     setWindows((current) =>
       current.map((window) =>
         window.id === id ? { ...window, x: rect.left, y: rect.top } : window,
+      ),
+    );
+  }
+
+  function startWindowResize(
+    id: AppId,
+    direction: WindowResizeDirection,
+    event: ReactPointerEvent<HTMLDivElement>,
+    rect: DOMRect,
+  ) {
+    if (event.button !== 0 || window.innerWidth < 1024) return;
+    event.preventDefault();
+    event.stopPropagation();
+    focusWindow(id);
+
+    resizeState.current = {
+      direction,
+      height: rect.height,
+      id,
+      pointerX: event.clientX,
+      pointerY: event.clientY,
+      width: rect.width,
+      x: rect.left,
+      y: rect.top,
+    };
+    document.body.style.cursor = `${direction}-resize`;
+    document.body.style.userSelect = "none";
+
+    setWindows((current) =>
+      current.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              height: rect.height,
+              width: rect.width,
+              x: rect.left,
+              y: rect.top,
+            }
+          : item,
       ),
     );
   }
@@ -377,11 +433,7 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
 
   if (!isDesktop) {
     return (
-      <MobilePortfolio
-        selectedSkill={selectedSkill}
-        onSelectSkill={setSelectedSkill}
-        onBack={onBack}
-      />
+      <MobilePortfolio onBack={onBack} />
     );
   }
 
@@ -412,11 +464,9 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
                   onFocus={focusWindow}
                   onToggleMaximize={toggleMaximize}
                   onStartDrag={startWindowDrag}
-                  onResize={resizeWindow}
+                  onStartResize={startWindowResize}
                 >
                   {renderWindowContent(window, {
-                    selectedSkill,
-                    setSelectedSkill,
                     terminalLines,
                     terminalInput,
                     setTerminalInput,
@@ -451,8 +501,6 @@ export function DesktopPage({ onBack }: { onBack: () => void }) {
 function renderWindowContent(
   window: WindowState,
   state: {
-    selectedSkill: SkillNode;
-    setSelectedSkill: (skill: SkillNode) => void;
     terminalLines: string[];
     terminalInput: string;
     setTerminalInput: (value: string) => void;
@@ -467,8 +515,6 @@ function renderWindowContent(
       return <ResumeApp />;
     case "projects":
       return <ProjectsApp />;
-    case "skills":
-      return <SkillsApp selectedSkill={state.selectedSkill} onSelectSkill={state.setSelectedSkill} />;
     case "experience":
       return <ExperienceApp />;
     case "education":

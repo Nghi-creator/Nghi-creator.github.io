@@ -66,6 +66,32 @@ describe("CreatorOS routes and interactions", () => {
     await waitFor(() => expect(resumeWindow).toHaveFocus());
   });
 
+  it("removes the Skill Map app from the desktop", () => {
+    window.localStorage.setItem(VISITED_STORAGE_KEY, "1");
+    render(<App />);
+
+    expect(screen.queryByTitle("Open Skill Map")).not.toBeInTheDocument();
+  });
+
+  it("maximizes edge-to-edge and exposes every resize direction", async () => {
+    const user = userEvent.setup();
+    window.localStorage.setItem(VISITED_STORAGE_KEY, "1");
+    const { container } = render(<App />);
+
+    const profileWindow = screen.getByRole("dialog", { name: "Profile" });
+    expect(
+      profileWindow.querySelectorAll("[data-resize-direction]"),
+    ).toHaveLength(8);
+
+    await user.click(screen.getByTitle("Maximize"));
+    expect(profileWindow).toHaveAttribute("data-window-mode", "maximized");
+    expect(profileWindow).toHaveClass("inset-0");
+    expect(
+      profileWindow.querySelectorAll("[data-resize-direction]"),
+    ).toHaveLength(0);
+    expect(container.querySelector('[data-window-mode="maximized"]')).toBe(profileWindow);
+  });
+
   it("starts with default windows instead of reopening the previous session", async () => {
     window.localStorage.setItem(VISITED_STORAGE_KEY, "1");
     window.localStorage.setItem(

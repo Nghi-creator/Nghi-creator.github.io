@@ -10,7 +10,7 @@ Live site: https://nghi-creator.github.io/
 
 ## What It Shows
 
-- Profile, resume, education, certifications, experience, projects, skill map, terminal, and contact apps.
+- Profile, resume, education, certifications, experience, projects, terminal, and contact apps.
 - A looping cinematic landing page with a short boot sequence into the desktop.
 - Movable, resizable, persistent windows on desktop.
 - A dedicated scrollable mobile portfolio for smaller screens.
@@ -29,11 +29,11 @@ Live site: https://nghi-creator.github.io/
 
 ## Portfolio Blurb
 
-I built CreatorOS as a less generic developer portfolio: instead of listing my name and skills on a static page, it behaves like a tiny personal operating system. Visitors can open apps for my resume, projects, skills, experience, education, certifications, terminal, and contact links.
+I built CreatorOS as a less generic developer portfolio: instead of presenting a static page, it behaves like a tiny personal operating system. Visitors can open apps for my resume, projects, experience, education, certifications, terminal, and contact links.
 
 ## Short Share Copy
 
-CreatorOS is my interactive portfolio: a tiny personal operating system where visitors can open apps for my resume, projects, experience, education, certifications, skill map, terminal, and contact links.
+CreatorOS is my interactive portfolio: a tiny personal operating system where visitors can open apps for my resume, projects, experience, education, certifications, terminal, and contact links.
 
 Visit: https://nghi-creator.github.io/
 

@@ -1,11 +1,9 @@
 import type { FormEvent, KeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
-import type { LucideIcon } from "lucide-react";
 
 export type AppId =
   | "profile"
   | "resume"
   | "projects"
-  | "skills"
   | "experience"
   | "education"
   | "certifications"
@@ -26,22 +24,31 @@ export type WindowState = {
   height?: number;
 };
 
-export type SkillNode = {
-  id: string;
-  label: string;
-  detail: string;
-  x: number;
-  y: number;
-  color: string;
-  icon: LucideIcon;
-  tools: string[];
-  linksTo: string[];
-};
-
 export type DragState = {
   id: AppId;
   offsetX: number;
   offsetY: number;
+  width: number;
+  height: number;
+};
+
+export type WindowResizeDirection =
+  | "n"
+  | "ne"
+  | "e"
+  | "se"
+  | "s"
+  | "sw"
+  | "w"
+  | "nw";
+
+export type ResizeState = {
+  id: AppId;
+  direction: WindowResizeDirection;
+  pointerX: number;
+  pointerY: number;
+  x: number;
+  y: number;
   width: number;
   height: number;
 };
@@ -54,7 +61,9 @@ export type WindowDragHandler = (
 
 export type WindowResizeHandler = (
   id: AppId,
-  size: { width: number; height: number },
+  direction: WindowResizeDirection,
+  event: ReactPointerEvent<HTMLDivElement>,
+  rect: DOMRect,
 ) => void;
 
 export type TerminalSubmitHandler = (event?: FormEvent) => void;

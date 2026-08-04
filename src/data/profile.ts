@@ -1,23 +1,15 @@
 import {
   Award,
-  Bot,
   BriefcaseBusiness,
   CircleUserRound,
-  Code2,
-  Cpu,
-  Database,
   FileText,
   GraduationCap,
-  Layers3,
   Mail,
-  Network,
-  ServerCog,
-  Sparkles,
   TerminalSquare,
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 import { ProjectFolderIcon } from "../components/icons/ProjectFolderIcon";
-import type { AppId, SkillNode, WindowState } from "../types";
+import type { AppId, WindowState } from "../types";
 
 type AppIcon = ComponentType<SVGProps<SVGSVGElement> & { size?: number | string }>;
 
@@ -25,7 +17,6 @@ export const appMeta = {
   profile: { title: "Profile", accent: "bg-[#1f7a4a]", icon: CircleUserRound },
   resume: { title: "Resume", accent: "bg-[#1f7a4a]", icon: FileText },
   projects: { title: "Projects", accent: "bg-[#1f7a4a]", icon: ProjectFolderIcon },
-  skills: { title: "Skill Map", accent: "bg-[#1f7a4a]", icon: Network },
   experience: {
     title: "Experience",
     accent: "bg-[#1f7a4a]",
@@ -55,7 +46,6 @@ export const desktopApps: AppId[] = [
   "certifications",
   "experience",
   "projects",
-  "skills",
   "contact",
   "terminal",
 ];
@@ -68,7 +58,6 @@ export const taskbarApps: AppId[] = [
   "experience",
   "education",
   "certifications",
-  "skills",
   "terminal",
 ];
 
@@ -76,7 +65,6 @@ export const appRoutes: Record<AppId, string> = {
   profile: "profile",
   resume: "resume",
   projects: "projects",
-  skills: "skills",
   experience: "experience",
   education: "education",
   certifications: "certifications",
@@ -93,7 +81,6 @@ export const windowMinimumSizes: Record<AppId, { width: number; height: number }
   profile: { width: 460, height: 420 },
   resume: { width: 620, height: 520 },
   projects: { width: 520, height: 460 },
-  skills: { width: 760, height: 520 },
   experience: { width: 600, height: 400 },
   education: { width: 480, height: 340 },
   certifications: { width: 520, height: 380 },
@@ -117,15 +104,6 @@ export const defaultWindows: WindowState[] = [
     accent: appMeta.resume.accent,
     open: false,
     z: 12,
-    maximized: false,
-    animationKey: 0,
-  },
-  {
-    id: "skills",
-    title: appMeta.skills.title,
-    accent: appMeta.skills.accent,
-    open: false,
-    z: 11,
     maximized: false,
     animationKey: 0,
   },
@@ -319,100 +297,6 @@ export const certifications = [
     issuer: "British Council",
     href: "/IELTS_ETRF.pdf",
     action: "View certificate",
-  },
-];
-
-export const skills: SkillNode[] = [
-  {
-    id: "center",
-    label: "Nicholas",
-    detail: "Aspiring software engineer building robust, scalable products.",
-    x: 50,
-    y: 50,
-    color: "bg-white text-slate-950",
-    icon: Sparkles,
-    tools: ["systems taste", "product focus", "fast learner"],
-    linksTo: ["frontend", "backend", "cloud", "data", "ai", "architecture"],
-  },
-  {
-    id: "frontend",
-    label: "Frontend",
-    detail:
-      "Interactive product interfaces with TypeScript, React, and focused UX.",
-    x: 22,
-    y: 28,
-    color: "bg-cyan-300 text-slate-950",
-    icon: Code2,
-    tools: ["TypeScript", "React", "Tailwind"],
-    linksTo: ["backend", "architecture"],
-  },
-  {
-    id: "backend",
-    label: "Backend",
-    detail:
-      "API design and service foundations with Java, Express.js, and scalable patterns.",
-    x: 76,
-    y: 31,
-    color: "bg-emerald-300 text-slate-950",
-    icon: ServerCog,
-    tools: ["Java", "Express.js", "Node", "WebRTC"],
-    linksTo: ["data", "cloud"],
-  },
-  {
-    id: "data",
-    label: "Data",
-    detail:
-      "Practical data persistence for products that need clean models and reliable access.",
-    x: 24,
-    y: 74,
-    color: "bg-amber-300 text-slate-950",
-    icon: Database,
-    tools: ["PostgreSQL", "MySQL", "MongoDB", "Supabase"],
-    linksTo: ["backend"],
-  },
-  {
-    id: "cloud",
-    label: "Cloud + Platform",
-    detail:
-      "Cloud-native infrastructure, delivery automation, and latency-sensitive systems for demanding workloads.",
-    x: 80,
-    y: 71,
-    color: "bg-emerald-300 text-slate-950",
-    icon: Cpu,
-    tools: [
-      "AWS",
-      "GCP",
-      "Docker",
-      "Kubernetes",
-      "Helm",
-      "Terraform",
-      "GitHub Actions",
-    ],
-    linksTo: ["architecture"],
-  },
-  {
-    id: "architecture",
-    label: "Architecture",
-    detail:
-      "System design, scale, reliability, and the boring choices that keep software alive.",
-    x: 50,
-    y: 18,
-    color: "bg-violet-300 text-slate-950",
-    icon: Layers3,
-    tools: ["system design", "scalability", "latency"],
-    linksTo: ["frontend", "backend", "cloud"],
-  },
-  {
-    id: "ai",
-    label: "AI + Tools",
-    detail:
-      "Exploring the intersection of artificial intelligence and developer tools.",
-    x: 50,
-    y: 84,
-    color: "bg-lime-300 text-slate-950",
-    icon: Bot,
-    tools: ["automation", "experiments", "tooling"],
-    linksTo: ["frontend", "data"],
   },
 ];
 

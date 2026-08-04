@@ -7,27 +7,20 @@ import { ExperienceApp } from "../apps/ExperienceApp";
 import { ProfileApp } from "../apps/ProfileApp";
 import { ProjectsApp } from "../apps/ProjectsApp";
 import { ResumeApp } from "../apps/ResumeApp";
-import { SkillsApp } from "../apps/SkillsApp";
-import type { SkillNode } from "../../types";
 
 const sections = [
   ["profile", "Profile"],
   ["resume", "Resume"],
   ["projects", "Projects"],
   ["experience", "Experience"],
-  ["skills", "Skills"],
   ["education", "Education"],
   ["certifications", "Certifications"],
   ["contact", "Contact"],
 ] as const;
 
 export function MobilePortfolio({
-  selectedSkill,
-  onSelectSkill,
   onBack,
 }: {
-  selectedSkill: SkillNode;
-  onSelectSkill: (skill: SkillNode) => void;
   onBack: () => void;
 }) {
   useEffect(() => {
@@ -98,12 +91,6 @@ export function MobilePortfolio({
         </MobileSection>
         <MobileSection id="experience" title="Experience">
           <ExperienceApp />
-        </MobileSection>
-        <MobileSection id="skills" title="Skill map">
-          <SkillsApp
-            selectedSkill={selectedSkill}
-            onSelectSkill={onSelectSkill}
-          />
         </MobileSection>
         <MobileSection id="education" title="Education">
           <EducationApp />
