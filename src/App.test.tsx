@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "./App";
@@ -33,6 +33,14 @@ describe("CreatorOS routes and interactions", () => {
     window.history.replaceState({}, "", "/");
     Object.defineProperty(window, "innerWidth", { configurable: true, value: 1280 });
     Object.defineProperty(window, "innerHeight", { configurable: true, value: 720 });
+    Object.defineProperty(navigator, "share", {
+      configurable: true,
+      value: undefined,
+    });
+    Object.defineProperty(navigator, "canShare", {
+      configurable: true,
+      value: undefined,
+    });
     setDesktopLayout(true);
   });
 
@@ -75,6 +83,71 @@ describe("CreatorOS routes and interactions", () => {
     expect(
       screen.getByRole("heading", { level: 2, name: "Selected projects" }),
     ).toBeInTheDocument();
+  });
+
+  it("shows both mobile CVs with independent view and file-sharing actions", async () => {
+    const user = userEvent.setup();
+    const share = vi.fn().mockResolvedValue(undefined);
+    const canShare = vi.fn().mockReturnValue(true);
+    const fetchResume = vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
+      blob: vi.fn().mockResolvedValue(
+        new Blob(["portfolio cv"], { type: "application/pdf" }),
+      ),
+    } as unknown as Response);
+    Object.defineProperty(navigator, "share", { configurable: true, value: share });
+    Object.defineProperty(navigator, "canShare", {
+      configurable: true,
+      value: canShare,
+    });
+    setDesktopLayout(false);
+    window.localStorage.setItem(VISITED_STORAGE_KEY, "1");
+    render(<App />);
+
+    const cvOptionsButton = screen.getByRole("button", { name: "Open CV options" });
+    await user.click(cvOptionsButton);
+    const cvDialog = screen.getByRole("dialog", { name: "Choose a CV" });
+    expect(within(cvDialog).getByRole("link", { name: "View industry CV" })).toHaveAttribute(
+      "href",
+      "/NguyenGiaNghi_Industry_CV.pdf",
+    );
+    expect(within(cvDialog).getByRole("link", { name: "View academic CV" })).toHaveAttribute(
+      "href",
+      "/NguyenGiaNghi_Academic_CV.pdf",
+    );
+    await user.click(
+      within(cvDialog).getByRole("button", { name: "Share or save industry CV" }),
+    );
+
+    await waitFor(() => expect(share).toHaveBeenCalledTimes(1));
+    const shareData = share.mock.calls[0][0] as { files?: File[] };
+    expect(shareData.files?.[0]).toBeInstanceOf(File);
+    expect(shareData.files?.[0].name).toBe("Nicholas_Nguyen_Industry_CV.pdf");
+    fireEvent.keyDown(cvDialog, { key: "Escape" });
+    await waitFor(() => expect(cvDialog).not.toBeInTheDocument());
+    expect(cvOptionsButton).toHaveFocus();
+    fetchResume.mockRestore();
+  });
+
+  it("falls back to a download when native mobile sharing is unavailable", async () => {
+    const user = userEvent.setup();
+    const clickDownload = vi
+      .spyOn(HTMLAnchorElement.prototype, "click")
+      .mockImplementation(function captureDownload(this: HTMLAnchorElement) {
+        expect(this.pathname).toBe("/NguyenGiaNghi_Academic_CV.pdf");
+        expect(this.download).toBe("Nicholas_Nguyen_Academic_CV.pdf");
+      });
+    setDesktopLayout(false);
+    window.localStorage.setItem(VISITED_STORAGE_KEY, "1");
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "Open CV options" }));
+    await user.click(
+      screen.getByRole("button", { name: "Share or save academic CV" }),
+    );
+
+    expect(clickDownload).toHaveBeenCalledTimes(1);
+    clickDownload.mockRestore();
   });
 
   it("focuses an opened window", async () => {

@@ -1,5 +1,7 @@
-import { ArrowLeft, Download } from "lucide-react";
-import { useEffect } from "react";
+import { ArrowLeft, FileText } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { CvId, CvOption } from "../../data/cv";
+import { shareCv } from "../../lib/shareCv";
 import { CertificationsApp } from "../apps/CertificationsApp";
 import { ContactApp } from "../apps/ContactApp";
 import { EducationApp } from "../apps/EducationApp";
@@ -7,6 +9,7 @@ import { ExperienceApp } from "../apps/ExperienceApp";
 import { ProfileApp } from "../apps/ProfileApp";
 import { ProjectsApp } from "../apps/ProjectsApp";
 import { ResumeApp } from "../apps/ResumeApp";
+import { CvOptionsSheet } from "./CvOptionsSheet";
 
 const sections = [
   ["profile", "Profile"],
@@ -18,11 +21,10 @@ const sections = [
   ["contact", "Contact"],
 ] as const;
 
-export function MobilePortfolio({
-  onBack,
-}: {
-  onBack: () => void;
-}) {
+export function MobilePortfolio({ onBack }: { onBack: () => void }) {
+  const [cvOptionsOpen, setCvOptionsOpen] = useState(false);
+  const [sharingCvId, setSharingCvId] = useState<CvId | null>(null);
+
   useEffect(() => {
     const route = window.location.pathname.replace(/^\/+|\/+$/g, "");
     if (!sections.some(([id]) => id === route)) return;
@@ -33,33 +35,46 @@ export function MobilePortfolio({
     return () => window.clearTimeout(timer);
   }, []);
 
+  async function handleShareCv(cv: CvOption) {
+    if (sharingCvId) return;
+
+    setSharingCvId(cv.id);
+    try {
+      await shareCv(cv);
+    } finally {
+      setSharingCvId(null);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#04110b] text-white lg:hidden">
       <header className="sticky top-0 z-40 border-b border-[#1f7a4a]/35 bg-[#052416]/95 px-4 py-3 backdrop-blur-xl">
-        <div className="flex items-center justify-between gap-3">
-          <div>
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0">
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-emerald-200/55">
               Nicholas Nguyen
             </p>
-            <h1 className="text-lg font-black text-emerald-50">
+            <h1 className="text-base font-black text-emerald-50 sm:text-lg">
               Software Engineer
             </h1>
           </div>
-          <div className="flex gap-2">
-            <a
+          <div className="flex shrink-0 gap-1">
+            <button
               className="flex h-11 w-11 items-center justify-center rounded-md bg-[#1f7a4a] text-[#052416] transition hover:bg-[#2b9a60] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9be7b3] focus-visible:ring-offset-2 focus-visible:ring-offset-[#052416]"
-              href="/NguyenGiaNghi_Industry_CV.pdf"
-              download
-              title="Download resume"
+              type="button"
+              onClick={() => setCvOptionsOpen(true)}
+              aria-label="Open CV options"
+              title="CV options"
             >
-              <Download size={17} />
-            </a>
+              <FileText size={18} aria-hidden="true" />
+            </button>
             <button
               className="flex h-11 w-11 items-center justify-center rounded-md border border-white/15 text-white/80 transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9be7b3] focus-visible:ring-offset-2 focus-visible:ring-offset-[#052416]"
               onClick={onBack}
+              aria-label="Back to welcome"
               title="Back to welcome"
             >
-              <ArrowLeft size={17} />
+              <ArrowLeft size={18} aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -78,6 +93,14 @@ export function MobilePortfolio({
           ))}
         </nav>
       </header>
+
+      {cvOptionsOpen ? (
+        <CvOptionsSheet
+          sharingCvId={sharingCvId}
+          onClose={() => setCvOptionsOpen(false)}
+          onShare={handleShareCv}
+        />
+      ) : null}
 
       <main>
         <MobileSection id="profile" title="Profile">
