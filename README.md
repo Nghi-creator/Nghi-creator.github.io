@@ -5,7 +5,7 @@ CreatorOS is my interactive portfolio: a personal desktop-style web page where e
 Live site: https://nghi-creator.github.io/
 
 <p align="center">
-  <img src="public/creatoros-preview.png" alt="CreatorOS desktop preview" width="100%">
+  <img src="public/creatoros-preview.jpg" alt="CreatorOS desktop preview" width="100%">
 </p>
 
 ## What It Shows

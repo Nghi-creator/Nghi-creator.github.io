@@ -46,6 +46,7 @@ describe("CreatorOS routes and interactions", () => {
 
   it("preserves the cinematic welcome for a first-time visitor", () => {
     render(<App />);
+    expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Boot CreatorOS" })).toBeInTheDocument();
   });
 

@@ -8,9 +8,13 @@ export function ProjectsApp() {
         <article key={project.name} className="rounded-lg border border-white/10 bg-white/10 p-4">
           {"screenshot" in project && project.screenshot ? (
             <img
-                  className="mx-auto mb-4 aspect-video w-full max-w-6xl rounded-md border border-white/10 bg-black/30 object-cover object-top"
+              className="mx-auto mb-4 aspect-video w-full max-w-6xl rounded-md border border-white/10 bg-black/30 object-cover object-top"
               src={project.screenshot}
               alt={`${project.name} interface preview`}
+              width={1600}
+              height={877}
+              loading="lazy"
+              decoding="async"
             />
           ) : null}
           <div className="mb-2 flex items-center justify-between gap-3">
@@ -27,7 +31,7 @@ export function ProjectsApp() {
           ) : null}
           {"architecture" in project && project.architecture ? (
             <a
-                  className="mx-auto mb-4 block max-w-7xl overflow-hidden rounded-md border border-white/10 bg-black/30 transition hover:border-cyan-200/35"
+              className="mx-auto mb-4 block max-w-7xl overflow-hidden rounded-md border border-white/10 bg-black/30 transition hover:border-cyan-200/35"
               href={project.architecture}
               target="_blank"
               rel="noreferrer"
