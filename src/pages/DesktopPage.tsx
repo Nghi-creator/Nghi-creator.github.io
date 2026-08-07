@@ -1,539 +1,123 @@
-import {
-  FormEvent,
-  KeyboardEvent,
-  PointerEvent as ReactPointerEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useState } from "react";
 import { SpaceBackdrop } from "../components/SpaceBackdrop";
-import { CertificationsApp } from "../components/apps/CertificationsApp";
-import { ContactApp } from "../components/apps/ContactApp";
-import { EducationApp } from "../components/apps/EducationApp";
-import { ExperienceApp } from "../components/apps/ExperienceApp";
-import { ProfileApp } from "../components/apps/ProfileApp";
-import { ProjectsApp } from "../components/apps/ProjectsApp";
-import { ResumeApp } from "../components/apps/ResumeApp";
-import { TerminalApp } from "../components/apps/TerminalApp";
-import { DesktopShortcuts } from "../components/os/DesktopShortcuts";
+import { MobilePortfolio } from "../components/mobile/MobilePortfolio";
 import { CommandPalette } from "../components/os/CommandPalette";
+import { DesktopShortcuts } from "../components/os/DesktopShortcuts";
 import { OSWindow } from "../components/os/OSWindow";
 import { Taskbar } from "../components/os/Taskbar";
 import { TopBar } from "../components/os/TopBar";
-import { MobilePortfolio } from "../components/mobile/MobilePortfolio";
-import {
-  appIdFromPath,
-  appRoutes,
-  createWindowState,
-  defaultWindows,
-  terminalResponses,
-  windowMinimumSizes,
-} from "../data/profile";
-import type {
-  AppId,
-  DragState,
-  ResizeState,
-  WindowResizeDirection,
-  WindowState,
-} from "../types";
-import { safeStorageGet, safeStorageRemove, safeStorageSet } from "../lib/storage";
-import { calculateResizedWindow } from "../lib/windowGeometry";
-
-const WINDOW_LAYOUT_STORAGE_KEY = "creator-os-window-layout-v1";
-const WINDOW_MARGIN = 8;
-const WINDOW_TOP_LIMIT = 42;
-const WINDOW_BOTTOM_LIMIT = 58;
-
-function isFiniteNumber(value: unknown): value is number {
-  return typeof value === "number" && Number.isFinite(value);
-}
-
-function clamp(value: number, minimum: number, maximum: number) {
-  return Math.min(Math.max(value, minimum), maximum);
-}
-
-function useDesktopLayout() {
-  const [isDesktop, setIsDesktop] = useState(() =>
-    window.matchMedia("(min-width: 1024px)").matches,
-  );
-
-  useEffect(() => {
-    const query = window.matchMedia("(min-width: 1024px)");
-    const updateLayout = (event: MediaQueryListEvent) => setIsDesktop(event.matches);
-    setIsDesktop(query.matches);
-    query.addEventListener("change", updateLayout);
-    return () => query.removeEventListener("change", updateLayout);
-  }, []);
-
-  return isDesktop;
-}
-
-function readStoredWindows(): WindowState[] {
-  try {
-    const storedLayout = safeStorageGet(WINDOW_LAYOUT_STORAGE_KEY);
-    if (!storedLayout) return defaultWindows;
-
-    const parsed = JSON.parse(storedLayout) as Partial<WindowState>[];
-    if (!Array.isArray(parsed)) return defaultWindows;
-
-    return defaultWindows.map((defaultWindow) => {
-      const storedWindow = parsed.find((window) => window.id === defaultWindow.id);
-      if (!storedWindow) return defaultWindow;
-      const minimum = windowMinimumSizes[defaultWindow.id];
-      const maxWidth = Math.max(320, window.innerWidth - WINDOW_MARGIN * 2);
-      const maxHeight = Math.max(
-        240,
-        window.innerHeight - WINDOW_TOP_LIMIT - WINDOW_BOTTOM_LIMIT,
-      );
-      const minWidth = Math.min(minimum.width, maxWidth);
-      const minHeight = Math.min(minimum.height, maxHeight);
-      const width = isFiniteNumber(storedWindow.width)
-        ? clamp(storedWindow.width, minWidth, maxWidth)
-        : undefined;
-      const height = isFiniteNumber(storedWindow.height)
-        ? clamp(storedWindow.height, minHeight, maxHeight)
-        : undefined;
-      const positioningWidth = width ?? minWidth;
-      const positioningHeight = height ?? minHeight;
-      const hasStoredSize = width !== undefined && height !== undefined;
-      const maxX = Math.max(WINDOW_MARGIN, window.innerWidth - positioningWidth - WINDOW_MARGIN);
-      const maxY = Math.max(
-        WINDOW_TOP_LIMIT,
-        window.innerHeight - positioningHeight - WINDOW_BOTTOM_LIMIT,
-      );
-
-      return {
-        ...defaultWindow,
-        open: defaultWindow.open,
-        z: defaultWindow.z,
-        maximized: false,
-        animationKey: defaultWindow.animationKey,
-        x: hasStoredSize && isFiniteNumber(storedWindow.x)
-          ? clamp(storedWindow.x, WINDOW_MARGIN, maxX)
-          : undefined,
-        y: hasStoredSize && isFiniteNumber(storedWindow.y)
-          ? clamp(storedWindow.y, WINDOW_TOP_LIMIT, maxY)
-          : undefined,
-        width,
-        height,
-      };
-    });
-  } catch {
-    return defaultWindows;
-  }
-}
+import { WindowContent } from "../components/os/WindowContent";
+import { useDesktopKeyboardShortcuts } from "../hooks/useDesktopKeyboardShortcuts";
+import { useDesktopClock, useDesktopLayout } from "../hooks/useDesktopLayout";
+import { useTerminal } from "../hooks/useTerminal";
+import { useWindowInteractions } from "../hooks/useWindowInteractions";
+import { useWindowManager } from "../hooks/useWindowManager";
+import type { AppId } from "../types";
 
 export function DesktopPage({ onBack }: { onBack: () => void }) {
   const isDesktop = useDesktopLayout();
-  const [windows, setWindows] = useState(readStoredWindows);
-  const [now, setNow] = useState(() => new Date());
+  const now = useDesktopClock(isDesktop);
+  const terminal = useTerminal();
+  const {
+    activeWindowId,
+    closeAllWindows,
+    closeWindow,
+    focusWindow,
+    openWindow,
+    resetWorkspace,
+    setWindows,
+    toggleMaximize,
+    windows,
+  } = useWindowManager();
+  const { startWindowDrag, startWindowResize } = useWindowInteractions({
+    focusWindow,
+    setWindows,
+  });
   const [bouncingApp, setBouncingApp] = useState<AppId | null>(null);
   const [selectedDesktopApp, setSelectedDesktopApp] = useState<AppId | null>(null);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-  const [terminalLines, setTerminalLines] = useState<string[]>([
-    "CreatorOS terminal ready.",
-    "Type help to list commands.",
-  ]);
-  const [terminalInput, setTerminalInput] = useState("");
-  const dragState = useRef<DragState | null>(null);
-  const resizeState = useRef<ResizeState | null>(null);
 
-  const topZ = useMemo(() => Math.max(...windows.map((window) => window.z)), [windows]);
-  const activeWindowId = useMemo(
-    () => [...windows].filter((item) => item.open).sort((a, b) => b.z - a.z)[0]?.id ?? null,
-    [windows],
+  const launchWindow = useCallback(
+    (id: AppId) => {
+      setBouncingApp(id);
+      window.setTimeout(
+        () => setBouncingApp((current) => (current === id ? null : current)),
+        620,
+      );
+      openWindow(id);
+    },
+    [openWindow],
   );
 
-  useEffect(() => {
-    const geometry = windows.map(({ id, x, y, width, height }) => ({
-      id,
-      x,
-      y,
-      width,
-      height,
-    }));
-    safeStorageSet(WINDOW_LAYOUT_STORAGE_KEY, JSON.stringify(geometry));
-  }, [windows]);
-
-  useEffect(() => {
-    if (!isDesktop) return;
-    const timer = window.setInterval(() => setNow(new Date()), 1000);
-    return () => window.clearInterval(timer);
-  }, [isDesktop]);
-
-  useEffect(() => {
-    const requestedApp = appIdFromPath(window.location.pathname);
-    if (requestedApp && defaultWindows.some((item) => item.id === requestedApp)) {
-      openWindow(requestedApp);
-      if (window.innerWidth < 1024) {
-        window.setTimeout(() => document.getElementById(appRoutes[requestedApp])?.scrollIntoView(), 0);
-      }
-    }
-    // The initial deep link is intentionally handled once on desktop boot.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    function handleKeyboard(event: globalThis.KeyboardEvent) {
-      const target = event.target as HTMLElement | null;
-      const isTyping = target?.tagName === "INPUT" || target?.tagName === "TEXTAREA";
-
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        setCommandPaletteOpen((open) => !open);
-        return;
-      }
-
-      if (event.key === "Escape") {
-        if (commandPaletteOpen) {
-          setCommandPaletteOpen(false);
-          return;
-        }
-        const active = [...windows].filter((item) => item.open).sort((a, b) => b.z - a.z)[0];
-        if (active) closeWindow(active.id);
-      }
-
-      if (!isTyping && event.key === "Enter" && selectedDesktopApp) {
-        launchWindow(selectedDesktopApp);
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyboard);
-    return () => window.removeEventListener("keydown", handleKeyboard);
-    // Window changes intentionally refresh the keyboard handler's action closures.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [commandPaletteOpen, selectedDesktopApp, windows]);
-
-  useEffect(() => {
-    function handlePointerMove(event: PointerEvent) {
-      const resize = resizeState.current;
-      if (resize) {
-        const minimum = windowMinimumSizes[resize.id];
-        const bounds = calculateResizedWindow(
-          resize,
-          { x: event.clientX, y: event.clientY },
-          {
-            bottomLimit: WINDOW_BOTTOM_LIMIT,
-            margin: WINDOW_MARGIN,
-            minimumHeight: minimum.height,
-            minimumWidth: minimum.width,
-            topLimit: WINDOW_TOP_LIMIT,
-            viewportHeight: window.innerHeight,
-            viewportWidth: window.innerWidth,
-          },
-        );
-        setWindows((current) =>
-          current.map((item) =>
-            item.id === resize.id ? { ...item, ...bounds } : item,
-          ),
-        );
-        return;
-      }
-
-      const drag = dragState.current;
-      if (!drag) return;
-
-      const maxX = Math.max(WINDOW_MARGIN, window.innerWidth - drag.width - WINDOW_MARGIN);
-      const maxY = Math.max(
-        WINDOW_TOP_LIMIT,
-        window.innerHeight - drag.height - WINDOW_BOTTOM_LIMIT,
-      );
-      const nextX = clamp(event.clientX - drag.offsetX, WINDOW_MARGIN, maxX);
-      const nextY = clamp(event.clientY - drag.offsetY, WINDOW_TOP_LIMIT, maxY);
-
-      setWindows((current) =>
-        current.map((window) =>
-          window.id === drag.id ? { ...window, x: nextX, y: nextY } : window,
-        ),
-      );
-    }
-
-    function handlePointerUp() {
-      dragState.current = null;
-      resizeState.current = null;
-      document.body.style.removeProperty("cursor");
-      document.body.style.removeProperty("user-select");
-    }
-
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", handlePointerUp);
-    window.addEventListener("pointercancel", handlePointerUp);
-
-    return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerup", handlePointerUp);
-      window.removeEventListener("pointercancel", handlePointerUp);
-    };
-  }, []);
-
-  function openWindow(id: AppId) {
-    window.history.replaceState({}, "", `/${appRoutes[id]}`);
-    setWindows((current) => {
-      const nextZ = Math.max(...current.map((window) => window.z), topZ) + 1;
-      const hasWindow = current.some((window) => window.id === id);
-      const syncedWindows = hasWindow ? current : [...current, createWindowState(id, nextZ)];
-
-      return syncedWindows.map((window) =>
-        window.id === id
-          ? {
-              ...window,
-              open: true,
-              z: nextZ,
-              animationKey: window.animationKey + 1,
-              x: window.open ? window.x : undefined,
-              y: window.open ? window.y : undefined,
-            }
-          : window,
-      );
-    });
-  }
-
-  function launchWindow(id: AppId) {
-    setBouncingApp(id);
-    window.setTimeout(() => setBouncingApp((current) => (current === id ? null : current)), 620);
-    openWindow(id);
-  }
-
-  function closeWindow(id: AppId) {
-    setWindows((current) =>
-      current.map((window) =>
-        window.id === id
-          ? { ...window, open: false, maximized: false }
-          : window,
-      ),
-    );
-    if (appIdFromPath(window.location.pathname) === id) {
-      window.history.replaceState({}, "", "/");
-    }
-  }
-
-  function closeAllWindows() {
-    setWindows((current) =>
-      current.map((item) => ({ ...item, open: false, maximized: false })),
-    );
-    window.history.replaceState({}, "", window.location.pathname);
-  }
-
-  function resetWorkspace() {
-    safeStorageRemove(WINDOW_LAYOUT_STORAGE_KEY);
-    setWindows(defaultWindows.map((item) => ({ ...item })));
+  const handleResetWorkspace = useCallback(() => {
+    resetWorkspace();
     setSelectedDesktopApp(null);
-    window.history.replaceState({}, "", window.location.pathname);
-  }
+  }, [resetWorkspace]);
 
-  function focusWindow(id: AppId) {
-    setWindows((current) =>
-      current.map((window) =>
-        window.id === id ? { ...window, z: topZ + 1 } : window,
-      ),
-    );
-  }
-
-  function toggleMaximize(id: AppId) {
-    setWindows((current) =>
-      current.map((window) =>
-        window.id === id
-          ? {
-              ...window,
-              maximized: !window.maximized,
-              z: topZ + 1,
-              animationKey: window.animationKey + 1,
-            }
-          : window,
-      ),
-    );
-  }
-
-  function startWindowDrag(
-    id: AppId,
-    event: ReactPointerEvent<HTMLDivElement>,
-    rect: DOMRect,
-  ) {
-    if (event.button !== 0 || window.innerWidth < 1024) return;
-    event.preventDefault();
-    focusWindow(id);
-
-    dragState.current = {
-      id,
-      offsetX: event.clientX - rect.left,
-      offsetY: event.clientY - rect.top,
-      width: rect.width,
-      height: rect.height,
-    };
-
-    setWindows((current) =>
-      current.map((window) =>
-        window.id === id ? { ...window, x: rect.left, y: rect.top } : window,
-      ),
-    );
-  }
-
-  function startWindowResize(
-    id: AppId,
-    direction: WindowResizeDirection,
-    event: ReactPointerEvent<HTMLDivElement>,
-    rect: DOMRect,
-  ) {
-    if (event.button !== 0 || window.innerWidth < 1024) return;
-    event.preventDefault();
-    event.stopPropagation();
-    focusWindow(id);
-
-    resizeState.current = {
-      direction,
-      height: rect.height,
-      id,
-      pointerX: event.clientX,
-      pointerY: event.clientY,
-      width: rect.width,
-      x: rect.left,
-      y: rect.top,
-    };
-    document.body.style.cursor = `${direction}-resize`;
-    document.body.style.userSelect = "none";
-
-    setWindows((current) =>
-      current.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              height: rect.height,
-              width: rect.width,
-              x: rect.left,
-              y: rect.top,
-            }
-          : item,
-      ),
-    );
-  }
-
-  function submitTerminal(event?: FormEvent) {
-    event?.preventDefault();
-    const command = terminalInput.trim().toLowerCase();
-    if (!command) return;
-
-    if (command === "clear") {
-      setTerminalLines(["CreatorOS terminal ready."]);
-      setTerminalInput("");
-      return;
-    }
-
-    const response = terminalResponses[command] ?? [
-      `Unknown command: ${command}`,
-      "Type help to see what this shell knows.",
-    ];
-    setTerminalLines((lines) => [...lines, `> ${command}`, ...response]);
-    setTerminalInput("");
-  }
-
-  function handleTerminalKey(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.key === "Enter") submitTerminal();
-  }
+  useDesktopKeyboardShortcuts({
+    closeWindow,
+    commandPaletteOpen,
+    launchWindow,
+    selectedDesktopApp,
+    setCommandPaletteOpen,
+    windows,
+  });
 
   if (!isDesktop) {
-    return (
-      <MobilePortfolio onBack={onBack} />
-    );
+    return <MobilePortfolio onBack={onBack} />;
   }
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white">
-        <div className="absolute inset-0 bg-black" />
-        <SpaceBackdrop variant="desktop" className="absolute inset-0 opacity-95" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.08),transparent_30%),linear-gradient(90deg,rgba(0,0,0,0.5),rgba(0,0,0,0.02)_46%,rgba(0,0,0,0.68))]" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.5))]" />
+      <div className="absolute inset-0 bg-black" />
+      <SpaceBackdrop variant="desktop" className="absolute inset-0 opacity-95" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.08),transparent_30%),linear-gradient(90deg,rgba(0,0,0,0.5),rgba(0,0,0,0.02)_46%,rgba(0,0,0,0.68))]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.5))]" />
 
-        <TopBar onBack={onBack} />
+      <TopBar onBack={onBack} />
 
-        <section className="relative min-h-screen w-full px-4 pb-20 pt-12 lg:px-6">
-          <DesktopShortcuts
-            selectedApp={selectedDesktopApp}
-            onSelect={setSelectedDesktopApp}
-            onOpen={launchWindow}
-          />
-
-          <div className="hidden lg:contents">
-            {windows.map((window) =>
-              window.open ? (
-                <OSWindow
-                  key={window.id}
-                  window={window}
-                  isActive={activeWindowId === window.id}
-                  onClose={closeWindow}
-                  onFocus={focusWindow}
-                  onToggleMaximize={toggleMaximize}
-                  onStartDrag={startWindowDrag}
-                  onStartResize={startWindowResize}
-                >
-                  {renderWindowContent(window, {
-                    terminalLines,
-                    terminalInput,
-                    setTerminalInput,
-                    submitTerminal,
-                    handleTerminalKey,
-                  })}
-                </OSWindow>
-              ) : null,
-            )}
-          </div>
-        </section>
-
-        <Taskbar
-          openWindow={launchWindow}
-          now={now}
-          bouncingApp={bouncingApp}
-          onOpenSearch={() => setCommandPaletteOpen(true)}
-          onCloseAll={closeAllWindows}
-          onResetWorkspace={resetWorkspace}
+      <section className="relative min-h-screen w-full px-4 pb-20 pt-12 lg:px-6">
+        <DesktopShortcuts
+          selectedApp={selectedDesktopApp}
+          onSelect={setSelectedDesktopApp}
+          onOpen={launchWindow}
         />
-        <CommandPalette
-          open={commandPaletteOpen}
-          onClose={() => setCommandPaletteOpen(false)}
-          onOpenApp={launchWindow}
-          onCloseAll={closeAllWindows}
-          onResetWorkspace={resetWorkspace}
-        />
+
+        <div className="hidden lg:contents">
+          {windows.map((item) =>
+            item.open ? (
+              <OSWindow
+                key={item.id}
+                window={item}
+                isActive={activeWindowId === item.id}
+                onClose={closeWindow}
+                onFocus={focusWindow}
+                onToggleMaximize={toggleMaximize}
+                onStartDrag={startWindowDrag}
+                onStartResize={startWindowResize}
+              >
+                <WindowContent id={item.id} terminal={terminal} />
+              </OSWindow>
+            ) : null,
+          )}
+        </div>
+      </section>
+
+      <Taskbar
+        openWindow={launchWindow}
+        now={now}
+        bouncingApp={bouncingApp}
+        onOpenSearch={() => setCommandPaletteOpen(true)}
+        onCloseAll={closeAllWindows}
+        onResetWorkspace={handleResetWorkspace}
+      />
+      <CommandPalette
+        open={commandPaletteOpen}
+        onClose={() => setCommandPaletteOpen(false)}
+        onOpenApp={launchWindow}
+        onCloseAll={closeAllWindows}
+        onResetWorkspace={handleResetWorkspace}
+      />
     </main>
   );
-}
-
-function renderWindowContent(
-  window: WindowState,
-  state: {
-    terminalLines: string[];
-    terminalInput: string;
-    setTerminalInput: (value: string) => void;
-    submitTerminal: (event?: FormEvent) => void;
-    handleTerminalKey: (event: KeyboardEvent<HTMLInputElement>) => void;
-  },
-) {
-  switch (window.id) {
-    case "profile":
-      return <ProfileApp />;
-    case "resume":
-      return <ResumeApp />;
-    case "projects":
-      return <ProjectsApp />;
-    case "experience":
-      return <ExperienceApp />;
-    case "education":
-      return <EducationApp />;
-    case "certifications":
-      return <CertificationsApp />;
-    case "terminal":
-      return (
-        <TerminalApp
-          lines={state.terminalLines}
-          input={state.terminalInput}
-          onInput={state.setTerminalInput}
-          onSubmit={state.submitTerminal}
-          onKeyDown={state.handleTerminalKey}
-        />
-      );
-    case "contact":
-      return <ContactApp />;
-    default:
-      return null;
-  }
 }

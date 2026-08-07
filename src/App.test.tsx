@@ -66,6 +66,17 @@ describe("CreatorOS routes and interactions", () => {
     await waitFor(() => expect(resumeWindow).toHaveFocus());
   });
 
+  it("keeps terminal commands functional through the desktop controller", async () => {
+    const user = userEvent.setup();
+    window.localStorage.setItem(VISITED_STORAGE_KEY, "1");
+    render(<App />);
+
+    await user.click(screen.getByTitle("Open Terminal"));
+    await user.type(screen.getByPlaceholderText("help"), "frobnicate{Enter}");
+
+    expect(screen.getByText("Unknown command: frobnicate")).toBeInTheDocument();
+  });
+
   it("removes the Skill Map app from the desktop", () => {
     window.localStorage.setItem(VISITED_STORAGE_KEY, "1");
     render(<App />);
