@@ -57,7 +57,7 @@ function InfoTile({
   return (
     <div className="rounded-lg border border-white/10 bg-white/10 p-3">
       <Icon className="mb-2 text-cyan-200" size={18} />
-      <p className="text-xs uppercase tracking-[0.12em] text-white/40">
+      <p className="text-xs uppercase tracking-[0.12em] text-white/60">
         {label}
       </p>
       <p className="mt-1 text-sm font-bold text-white/90">{value}</p>

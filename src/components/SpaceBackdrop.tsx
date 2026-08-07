@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 type NetworkInformation = { saveData?: boolean };
 
@@ -9,6 +10,7 @@ export function SpaceBackdrop({
   variant: "landing" | "desktop";
   className?: string;
 }) {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [playVideo, setPlayVideo] = useState(false);
   const media =
     variant === "landing"
@@ -22,13 +24,14 @@ export function SpaceBackdrop({
         };
 
   useEffect(() => {
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const connection = (navigator as Navigator & { connection?: NetworkInformation }).connection;
     const video = document.createElement("video");
     const supportsVp9WebM = video.canPlayType('video/webm; codecs="vp9"') !== "";
 
-    setPlayVideo(supportsVp9WebM && !reducedMotion && !connection?.saveData);
-  }, []);
+    setPlayVideo(
+      supportsVp9WebM && !prefersReducedMotion && !connection?.saveData,
+    );
+  }, [prefersReducedMotion]);
 
   return (
     <div

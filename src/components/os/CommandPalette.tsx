@@ -94,7 +94,7 @@ export function CommandPalette({
           <Search size={18} className="text-emerald-200/65" />
           <input
             ref={inputRef}
-            className="h-14 min-w-0 flex-1 bg-transparent text-sm font-bold text-white outline-none placeholder:text-white/35"
+            className="h-14 min-w-0 flex-1 bg-transparent text-sm font-bold text-white outline-none placeholder:text-white/55"
             placeholder="Search apps or commands"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
@@ -153,7 +153,7 @@ export function CommandPalette({
             </div>
           ) : null}
         </div>
-        <p className="border-t border-white/10 px-4 py-2 font-mono text-[10px] font-bold text-white/35">
+        <p className="border-t border-white/10 px-4 py-2 font-mono text-[10px] font-bold text-white/60">
           Enter to open · Esc to close · Cmd/Ctrl + K anywhere
         </p>
       </section>

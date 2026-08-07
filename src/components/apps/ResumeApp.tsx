@@ -111,7 +111,7 @@ export function ResumeApp() {
                   {item.company}
                 </p>
               </div>
-              <p className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-white/45">
+              <p className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-white/60">
                 {item.dates}
               </p>
             </div>
@@ -133,7 +133,7 @@ export function ResumeApp() {
               <p className="mt-1 text-sm leading-6 text-white/70">
                 {item.program}
               </p>
-              <p className="mt-2 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-white/45">
+              <p className="mt-2 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-white/60">
                 {item.dates}
               </p>
             </article>

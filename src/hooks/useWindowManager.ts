@@ -83,6 +83,47 @@ function readStoredWindows(): WindowState[] {
   }
 }
 
+function clampWindowToViewport(item: WindowState): WindowState {
+  if (item.maximized) return item;
+
+  const minimum = windowMinimumSizes[item.id];
+  const maxWidth = Math.max(320, window.innerWidth - WINDOW_MARGIN * 2);
+  const maxHeight = Math.max(
+    240,
+    window.innerHeight - WINDOW_TOP_LIMIT - WINDOW_BOTTOM_LIMIT,
+  );
+  const minWidth = Math.min(minimum.width, maxWidth);
+  const minHeight = Math.min(minimum.height, maxHeight);
+  const width = isFiniteNumber(item.width)
+    ? clamp(item.width, minWidth, maxWidth)
+    : undefined;
+  const height = isFiniteNumber(item.height)
+    ? clamp(item.height, minHeight, maxHeight)
+    : undefined;
+  const positioningWidth = width ?? minWidth;
+  const positioningHeight = height ?? minHeight;
+  const maxX = Math.max(
+    WINDOW_MARGIN,
+    window.innerWidth - positioningWidth - WINDOW_MARGIN,
+  );
+  const maxY = Math.max(
+    WINDOW_TOP_LIMIT,
+    window.innerHeight - positioningHeight - WINDOW_BOTTOM_LIMIT,
+  );
+
+  return {
+    ...item,
+    width,
+    height,
+    x: isFiniteNumber(item.x)
+      ? clamp(item.x, WINDOW_MARGIN, maxX)
+      : undefined,
+    y: isFiniteNumber(item.y)
+      ? clamp(item.y, WINDOW_TOP_LIMIT, maxY)
+      : undefined,
+  };
+}
+
 export function useWindowManager() {
   const [windows, setWindows] = useState(readStoredWindows);
 
@@ -104,6 +145,16 @@ export function useWindowManager() {
     }));
     safeStorageSet(WINDOW_LAYOUT_STORAGE_KEY, JSON.stringify(geometry));
   }, [windows]);
+
+  useEffect(() => {
+    function handleViewportResize() {
+      if (window.innerWidth < 1024) return;
+      setWindows((current) => current.map(clampWindowToViewport));
+    }
+
+    window.addEventListener("resize", handleViewportResize);
+    return () => window.removeEventListener("resize", handleViewportResize);
+  }, []);
 
   const openWindow = useCallback((id: AppId) => {
     window.history.replaceState({}, "", `/${appRoutes[id]}`);
@@ -146,13 +197,13 @@ export function useWindowManager() {
     setWindows((current) =>
       current.map((item) => ({ ...item, open: false, maximized: false })),
     );
-    window.history.replaceState({}, "", window.location.pathname);
+    window.history.replaceState({}, "", "/");
   }, []);
 
   const resetWorkspace = useCallback(() => {
     safeStorageRemove(WINDOW_LAYOUT_STORAGE_KEY);
     setWindows(defaultWindows.map((item) => ({ ...item })));
-    window.history.replaceState({}, "", window.location.pathname);
+    window.history.replaceState({}, "", "/");
   }, []);
 
   const focusWindow = useCallback((id: AppId) => {

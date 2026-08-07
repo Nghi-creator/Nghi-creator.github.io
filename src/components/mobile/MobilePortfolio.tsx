@@ -47,7 +47,7 @@ export function MobilePortfolio({
           </div>
           <div className="flex gap-2">
             <a
-              className="flex h-9 w-9 items-center justify-center rounded-md bg-[#1f7a4a] text-[#052416]"
+              className="flex h-11 w-11 items-center justify-center rounded-md bg-[#1f7a4a] text-[#052416] transition hover:bg-[#2b9a60] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9be7b3] focus-visible:ring-offset-2 focus-visible:ring-offset-[#052416]"
               href="/NguyenGiaNghi_Industry_CV.pdf"
               download
               title="Download resume"
@@ -55,7 +55,7 @@ export function MobilePortfolio({
               <Download size={17} />
             </a>
             <button
-              className="flex h-9 w-9 items-center justify-center rounded-md border border-white/15 text-white/80"
+              className="flex h-11 w-11 items-center justify-center rounded-md border border-white/15 text-white/80 transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9be7b3] focus-visible:ring-offset-2 focus-visible:ring-offset-[#052416]"
               onClick={onBack}
               title="Back to welcome"
             >
@@ -70,7 +70,7 @@ export function MobilePortfolio({
           {sections.map(([id, label]) => (
             <a
               key={id}
-              className="shrink-0 rounded-md px-3 py-2 text-xs font-black text-white/60 transition hover:bg-white/10 hover:text-white"
+              className="shrink-0 rounded-md px-3 py-2 text-xs font-black text-white/70 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9be7b3]"
               href={`#${id}`}
             >
               {label}
@@ -120,9 +120,9 @@ function MobileSection({
       id={id}
       className="scroll-mt-28 border-b border-white/10 px-4 py-8"
     >
-      <p className="mb-5 font-mono text-[11px] font-black uppercase tracking-[0.18em] text-emerald-200/45">
+      <h2 className="mb-5 font-mono text-[11px] font-black uppercase tracking-[0.18em] text-emerald-200/70">
         {title}
-      </p>
+      </h2>
       {children}
     </section>
   );

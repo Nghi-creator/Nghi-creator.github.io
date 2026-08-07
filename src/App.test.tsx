@@ -6,11 +6,16 @@ import App from "./App";
 const VISITED_STORAGE_KEY = "creator-os-visited-v1";
 const WINDOW_LAYOUT_STORAGE_KEY = "creator-os-window-layout-v1";
 
-function setDesktopLayout(matches: boolean) {
+function setDesktopLayout(matches: boolean, reducedMotion = false) {
   vi.stubGlobal(
     "matchMedia",
     vi.fn().mockImplementation((query: string) => ({
-      matches,
+      matches:
+        query === "(min-width: 1024px)"
+          ? matches
+          : query === "(prefers-reduced-motion: reduce)"
+            ? reducedMotion
+            : false,
       media: query,
       onchange: null,
       addEventListener: vi.fn(),
@@ -36,6 +41,19 @@ describe("CreatorOS routes and interactions", () => {
     expect(screen.getByRole("button", { name: "Boot CreatorOS" })).toBeInTheDocument();
   });
 
+  it("skips looping and timed boot motion when reduced motion is preferred", async () => {
+    const user = userEvent.setup();
+    setDesktopLayout(true, true);
+    render(<App />);
+
+    expect(
+      screen.getByText("hi, i am nicholas nguyen, glad to meet you"),
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Boot CreatorOS" }));
+
+    expect(await screen.findByRole("dialog", { name: "Profile" })).toBeInTheDocument();
+  });
+
   it.each([
     ["/resume", "Resume"],
     ["/projects", "Projects"],
@@ -54,6 +72,9 @@ describe("CreatorOS routes and interactions", () => {
     render(<App />);
 
     expect(screen.getAllByRole("main")).toHaveLength(1);
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Selected projects" }),
+    ).toBeInTheDocument();
   });
 
   it("focuses an opened window", async () => {
@@ -124,6 +145,44 @@ describe("CreatorOS routes and interactions", () => {
         window.localStorage.getItem(WINDOW_LAYOUT_STORAGE_KEY) ?? "[]",
       ) as Array<Record<string, unknown>>;
       expect(savedLayout.every((item) => !("open" in item) && !("maximized" in item))).toBe(true);
+    });
+  });
+
+  it("normalizes the route when closing all windows or resetting the workspace", async () => {
+    const user = userEvent.setup();
+    window.localStorage.setItem(VISITED_STORAGE_KEY, "1");
+    render(<App />);
+
+    await user.click(screen.getByTitle("Open Resume"));
+    expect(window.location.pathname).toBe("/resume");
+    fireEvent.keyDown(window, { key: "k", ctrlKey: true });
+    await user.click(screen.getByRole("button", { name: "Close all windows" }));
+    expect(window.location.pathname).toBe("/");
+
+    await user.click(screen.getByTitle("Open Projects"));
+    expect(window.location.pathname).toBe("/projects");
+    fireEvent.keyDown(window, { key: "k", ctrlKey: true });
+    await user.click(screen.getByRole("button", { name: "Reset workspace" }));
+    expect(window.location.pathname).toBe("/");
+    expect(screen.getByRole("dialog", { name: "Profile" })).toBeInTheDocument();
+  });
+
+  it("re-clamps positioned windows when the desktop viewport shrinks", async () => {
+    window.localStorage.setItem(VISITED_STORAGE_KEY, "1");
+    window.localStorage.setItem(
+      WINDOW_LAYOUT_STORAGE_KEY,
+      '[{"id":"profile","x":700,"y":250,"width":500,"height":420}]',
+    );
+    render(<App />);
+
+    const profileWindow = screen.getByRole("dialog", { name: "Profile" });
+    Object.defineProperty(window, "innerWidth", { configurable: true, value: 1024 });
+    Object.defineProperty(window, "innerHeight", { configurable: true, value: 600 });
+    fireEvent(window, new Event("resize"));
+
+    await waitFor(() => {
+      expect(profileWindow.style.getPropertyValue("--window-x")).toBe("516px");
+      expect(profileWindow.style.getPropertyValue("--window-y")).toBe("122px");
     });
   });
 

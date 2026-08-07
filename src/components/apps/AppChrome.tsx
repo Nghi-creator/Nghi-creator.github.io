@@ -12,7 +12,7 @@ export function SectionTitle({ icon: Icon, title }: { icon: LucideIcon; title: s
 export function InfoGroup({ title, items }: { title: string; items: string[] }) {
   return (
     <section className="rounded-lg border border-white/10 bg-white/10 p-3">
-      <p className="mb-2 text-xs uppercase tracking-[0.12em] text-white/40">{title}</p>
+      <p className="mb-2 text-xs uppercase tracking-[0.12em] text-white/60">{title}</p>
       <div className="flex flex-wrap gap-2">
         {items.map((item) => (
           <span

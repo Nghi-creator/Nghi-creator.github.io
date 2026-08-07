@@ -181,7 +181,7 @@ export const projects = [
     tag: "edge cloud gaming",
     description:
       "A working personal edge-cloud gaming platform that runs interactive workloads on a user-owned node and streams them to a lightweight browser client.",
-    screenshot: "/pixelated-studio-preview.png",
+    screenshot: "/pixelated-studio-preview.jpg",
     architecture: "/edge-cloud-architecture.webp",
     architectureAlt: "Baseline personal edge cloud-gaming system architecture",
     researchStatus:

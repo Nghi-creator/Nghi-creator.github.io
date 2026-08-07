@@ -114,7 +114,15 @@ export function useWindowInteractions({
 
       setWindows((current) =>
         current.map((item) =>
-          item.id === id ? { ...item, x: rect.left, y: rect.top } : item,
+          item.id === id
+            ? {
+                ...item,
+                height: rect.height,
+                width: rect.width,
+                x: rect.left,
+                y: rect.top,
+              }
+            : item,
         ),
       );
     },

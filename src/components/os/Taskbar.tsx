@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { appMeta, taskbarApps } from "../../data/profile";
+import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
 import type { AppId } from "../../types";
 
 export function Taskbar({
@@ -121,7 +122,10 @@ function CreatorPanel({
   onResetWorkspace: () => void;
 }) {
   const message = "hey there, welcome to my portfolio.";
-  const [typedText, setTypedText] = useState("");
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const [typedText, setTypedText] = useState(() =>
+    prefersReducedMotion ? message : "",
+  );
   const [isDeleting, setIsDeleting] = useState(false);
   const statusItems = [
     ["mode", "builder"],
@@ -129,6 +133,12 @@ function CreatorPanel({
   ];
 
   useEffect(() => {
+    if (prefersReducedMotion) {
+      setTypedText(message);
+      setIsDeleting(false);
+      return;
+    }
+
     const atFullText = typedText.length === message.length;
     const atEmptyText = typedText.length === 0;
     const delay =
@@ -159,7 +169,7 @@ function CreatorPanel({
     }, delay);
 
     return () => window.clearTimeout(timer);
-  }, [typedText, isDeleting]);
+  }, [typedText, isDeleting, prefersReducedMotion]);
 
   return (
     <aside className="absolute bottom-16 right-3 w-[min(24rem,calc(100vw-1.5rem))] rounded-lg border border-[#1f7a4a]/35 bg-[#06160e]/95 p-4 text-white shadow-[0_18px_60px_rgba(0,0,0,0.4)] backdrop-blur-xl">
@@ -183,7 +193,9 @@ function CreatorPanel({
 
       <p className="mb-4 min-h-6 rounded-md border border-white/10 bg-black/20 px-3 py-2 font-mono text-sm font-bold text-white/75">
         <span>{typedText}</span>
-        <span className="typing-cursor ml-1 inline-block h-[1em] w-[0.08em] translate-y-[0.12em] bg-[#1f7a4a]" />
+        {!prefersReducedMotion ? (
+          <span className="typing-cursor ml-1 inline-block h-[1em] w-[0.08em] translate-y-[0.12em] bg-[#1f7a4a]" />
+        ) : null}
       </p>
 
       <div className="mb-4 grid grid-cols-2 gap-2">
@@ -192,7 +204,7 @@ function CreatorPanel({
             key={label}
             className="rounded-md border border-white/10 bg-white/10 px-3 py-2"
           >
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/35">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-white/60">
               {label}
             </p>
             <p className="mt-1 text-xs font-black text-emerald-50">{value}</p>

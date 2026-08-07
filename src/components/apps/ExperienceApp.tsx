@@ -13,7 +13,7 @@ export function ExperienceApp() {
               <h3 className="text-lg font-black">{item.role}</h3>
               <p className="text-sm font-bold text-emerald-100">{item.company}</p>
             </div>
-            <div className="text-right font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-white/45">
+            <div className="text-right font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-white/60">
               <p>{item.dates}</p>
               <p>{item.location}</p>
             </div>

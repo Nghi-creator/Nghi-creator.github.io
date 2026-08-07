@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { SpaceBackdrop } from "../components/SpaceBackdrop";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 const introLine = "hi, i am nicholas nguyen, glad to meet you";
 const bootLines = [
@@ -10,12 +11,21 @@ const bootLines = [
 ];
 
 export function LandingPage({ onEnter }: { onEnter: () => void }) {
-  const [typedText, setTypedText] = useState("");
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const [typedText, setTypedText] = useState(() =>
+    prefersReducedMotion ? introLine : "",
+  );
   const [isDeletingIntro, setIsDeletingIntro] = useState(false);
   const [isBooting, setIsBooting] = useState(false);
   const [bootLineCount, setBootLineCount] = useState(0);
 
   useEffect(() => {
+    if (prefersReducedMotion) {
+      setTypedText(introLine);
+      setIsDeletingIntro(false);
+      return;
+    }
+
     const atFullText = typedText.length === introLine.length;
     const atEmptyText = typedText.length === 0;
     const delay =
@@ -46,10 +56,15 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
     }, delay);
 
     return () => window.clearTimeout(timer);
-  }, [typedText, isDeletingIntro]);
+  }, [typedText, isDeletingIntro, prefersReducedMotion]);
 
   useEffect(() => {
     if (!isBooting) {
+      return;
+    }
+
+    if (prefersReducedMotion) {
+      onEnter();
       return;
     }
 
@@ -64,7 +79,7 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
 
     const enterTimer = window.setTimeout(onEnter, 420);
     return () => window.clearTimeout(enterTimer);
-  }, [bootLineCount, isBooting, onEnter]);
+  }, [bootLineCount, isBooting, onEnter, prefersReducedMotion]);
 
   function handleBoot() {
     if (isBooting) {
@@ -82,7 +97,9 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
       <section className="relative z-10 flex min-h-screen flex-col items-center px-5 pt-14 text-center">
         <p className="min-h-[4.5rem] max-w-5xl font-mono text-2xl font-black leading-tight tracking-[0.02em] text-white sm:text-4xl lg:text-5xl">
           <span>{typedText}</span>
-          <span className="typing-cursor ml-1 inline-block h-[1em] w-[0.08em] translate-y-[0.12em] bg-[#1f7a4a]" />
+          {!prefersReducedMotion ? (
+            <span className="typing-cursor ml-1 inline-block h-[1em] w-[0.08em] translate-y-[0.12em] bg-[#1f7a4a]" />
+          ) : null}
         </p>
 
         <button

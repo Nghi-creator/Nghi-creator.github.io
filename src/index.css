@@ -35,6 +35,11 @@ input {
   -webkit-tap-highlight-color: transparent;
 }
 
+:where(button, a, input):focus-visible {
+  outline: 2px solid #9be7b3;
+  outline-offset: 2px;
+}
+
 @layer components {
   .window-action {
     @apply flex h-7 w-7 items-center justify-center rounded-md text-[#d8ffe5]/75 transition hover:bg-[#1f7a4a]/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#1f7a4a];
