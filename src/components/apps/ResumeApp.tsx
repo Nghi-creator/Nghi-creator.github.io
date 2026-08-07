@@ -10,33 +10,9 @@ import {
   certifications,
   educationItems,
   experienceItems,
-  topSkills,
 } from "../../data/profile";
+import { coreStack, resumeFocus } from "../../data/resume";
 import { InfoGroup, SectionTitle } from "./AppChrome";
-
-const coreStack = [
-  "TypeScript",
-  "React",
-  "Java",
-  "Express.js",
-  "PostgreSQL",
-  "MongoDB",
-  "AWS",
-  "GCP",
-  "Docker",
-  "Kubernetes",
-  "Helm",
-  "Terraform",
-  "GitHub Actions",
-];
-
-const resumeFocus = [
-  ...topSkills,
-  "Computer Systems Performance",
-  "Distributed Systems & Coordination",
-  "Latency Diagnosis & Performance Evaluation",
-  "Internet Multimedia & Dependable Edge Services",
-];
 
 const links = [
   ["GitHub", "https://github.com/Nghi-creator"],

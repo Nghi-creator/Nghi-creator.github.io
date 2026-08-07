@@ -83,6 +83,34 @@ describe("CreatorOS routes and interactions", () => {
     expect(
       screen.getByRole("heading", { level: 2, name: "Selected projects" }),
     ).toBeInTheDocument();
+
+    const resumeSection = document.getElementById("resume");
+    const experienceSection = document.getElementById("experience");
+    const educationSection = document.getElementById("education");
+    const certificationsSection = document.getElementById("certifications");
+    expect(resumeSection).not.toBeNull();
+    expect(experienceSection).not.toBeNull();
+    expect(educationSection).not.toBeNull();
+    expect(certificationsSection).not.toBeNull();
+    expect(
+      within(resumeSection!).getByRole("button", { name: "View or share CVs" }),
+    ).toBeInTheDocument();
+    expect(within(resumeSection!).queryByText("TMA Solutions")).not.toBeInTheDocument();
+    expect(
+      within(resumeSection!).queryByText("VNUHCM - University of Science"),
+    ).not.toBeInTheDocument();
+    expect(
+      within(resumeSection!).queryByText("AWS Certified Solutions Architect - Associate"),
+    ).not.toBeInTheDocument();
+    expect(within(experienceSection!).getByText("TMA Solutions")).toBeInTheDocument();
+    expect(
+      within(educationSection!).getByText("VNUHCM - University of Science"),
+    ).toBeInTheDocument();
+    expect(
+      within(certificationsSection!).getByText(
+        "AWS Certified Solutions Architect - Associate",
+      ),
+    ).toBeInTheDocument();
   });
 
   it("shows both mobile CVs with independent view and file-sharing actions", async () => {

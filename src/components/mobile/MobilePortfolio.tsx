@@ -8,8 +8,8 @@ import { EducationApp } from "../apps/EducationApp";
 import { ExperienceApp } from "../apps/ExperienceApp";
 import { ProfileApp } from "../apps/ProfileApp";
 import { ProjectsApp } from "../apps/ProjectsApp";
-import { ResumeApp } from "../apps/ResumeApp";
 import { CvOptionsSheet } from "./CvOptionsSheet";
+import { MobileResumeSummary } from "./MobileResumeSummary";
 
 const sections = [
   ["profile", "Profile"],
@@ -107,7 +107,7 @@ export function MobilePortfolio({ onBack }: { onBack: () => void }) {
           <ProfileApp />
         </MobileSection>
         <MobileSection id="resume" title="Recruiter view">
-          <ResumeApp />
+          <MobileResumeSummary onOpenCvOptions={() => setCvOptionsOpen(true)} />
         </MobileSection>
         <MobileSection id="projects" title="Selected projects">
           <ProjectsApp />
