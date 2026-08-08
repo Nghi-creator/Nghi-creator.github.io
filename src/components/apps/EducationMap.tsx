@@ -1,8 +1,20 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import markerIconUrl from "leaflet/dist/images/marker-icon.png";
+import markerIconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
+import markerShadowUrl from "leaflet/dist/images/marker-shadow.png";
 import { useEffect, useRef } from "react";
 
 const campusCoordinates: L.LatLngExpression = [10.76278, 106.68139];
+const campusMarkerIcon = L.icon({
+  iconUrl: markerIconUrl,
+  iconRetinaUrl: markerIconRetinaUrl,
+  shadowUrl: markerShadowUrl,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41],
+});
 
 export function EducationMap() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -22,7 +34,7 @@ export function EducationMap() {
       maxZoom: 19,
     }).addTo(map);
 
-    L.marker(campusCoordinates)
+    L.marker(campusCoordinates, { icon: campusMarkerIcon })
       .addTo(map)
       .bindTooltip("VNUHCM University of Science", { direction: "top" });
 
