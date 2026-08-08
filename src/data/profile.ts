@@ -334,7 +334,7 @@ export const terminalResponses: Record<string, string[]> = {
     "Open the Resume app for a recruiter-friendly scan of experience, education, certifications, stack, and links.",
   ],
   skills: [
-    "TypeScript, JavaScript, React, Java, Express.js, Fastify, Spring Boot, PostgreSQL, MySQL, MongoDB, AWS, GCP, Docker, Kubernetes, Helm, Terraform, GitHub Actions",
+    "TypeScript, JavaScript, React, Java, C, C++, Express.js, Fastify, Spring Boot, PostgreSQL, MySQL, MongoDB, AWS, GCP, Docker, Kubernetes, Helm, Terraform, GitHub Actions",
   ],
   cloud: [
     "Domain focus: cloud-native infrastructure, delivery automation, ultra-low latency, and raw cloud compute.",

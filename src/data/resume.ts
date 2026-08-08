@@ -5,6 +5,8 @@ export const coreStack = [
   "JavaScript",
   "React",
   "Java",
+  "C",
+  "C++",
   "Express.js",
   "Fastify",
   "Spring Boot",
