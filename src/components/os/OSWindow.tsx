@@ -75,6 +75,8 @@ export function OSWindow({
   const windowSurface = window.maximized
     ? "border-[#1f7a4a]/40 bg-[#06160e] shadow-2xl"
     : "border-[#1f7a4a]/35 bg-[#06160e]/95 shadow-window backdrop-blur-2xl";
+  const contentOverflow =
+    window.id === "terminal" ? "overflow-hidden" : "overflow-auto";
 
   useEffect(() => {
     if (isActive) articleRef.current?.focus({ preventScroll: true });
@@ -150,7 +152,7 @@ export function OSWindow({
           </button>
         </div>
       </div>
-      <div className="min-h-0 flex-1 overflow-auto p-4">{children}</div>
+      <div className={`min-h-0 flex-1 p-4 ${contentOverflow}`}>{children}</div>
     </article>
   );
 }

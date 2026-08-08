@@ -2,10 +2,14 @@ import { topSkills } from "./profile";
 
 export const coreStack = [
   "TypeScript",
+  "JavaScript",
   "React",
   "Java",
   "Express.js",
+  "Fastify",
+  "Spring Boot",
   "PostgreSQL",
+  "MySQL",
   "MongoDB",
   "AWS",
   "GCP",

@@ -11,12 +11,18 @@ import type { ComponentType, SVGProps } from "react";
 import { ProjectFolderIcon } from "../components/icons/ProjectFolderIcon";
 import type { AppId, WindowState } from "../types";
 
-type AppIcon = ComponentType<SVGProps<SVGSVGElement> & { size?: number | string }>;
+type AppIcon = ComponentType<
+  SVGProps<SVGSVGElement> & { size?: number | string }
+>;
 
 export const appMeta = {
   profile: { title: "Profile", accent: "bg-[#1f7a4a]", icon: CircleUserRound },
   resume: { title: "Resume", accent: "bg-[#1f7a4a]", icon: FileText },
-  projects: { title: "Projects", accent: "bg-[#1f7a4a]", icon: ProjectFolderIcon },
+  projects: {
+    title: "Projects",
+    accent: "bg-[#1f7a4a]",
+    icon: ProjectFolderIcon,
+  },
   experience: {
     title: "Experience",
     accent: "bg-[#1f7a4a]",
@@ -34,10 +40,7 @@ export const appMeta = {
   },
   terminal: { title: "Terminal", accent: "bg-[#1f7a4a]", icon: TerminalSquare },
   contact: { title: "Contact", accent: "bg-[#1f7a4a]", icon: Mail },
-} satisfies Record<
-  AppId,
-  { title: string; accent: string; icon: AppIcon }
->;
+} satisfies Record<AppId, { title: string; accent: string; icon: AppIcon }>;
 
 export const desktopApps: AppId[] = [
   "profile",
@@ -74,10 +77,17 @@ export const appRoutes: Record<AppId, string> = {
 
 export function appIdFromPath(pathname: string): AppId | null {
   const route = pathname.replace(/^\/+|\/+$/g, "");
-  return (Object.entries(appRoutes).find(([, value]) => value === route)?.[0] as AppId | undefined) ?? null;
+  return (
+    (Object.entries(appRoutes).find(([, value]) => value === route)?.[0] as
+      | AppId
+      | undefined) ?? null
+  );
 }
 
-export const windowMinimumSizes: Record<AppId, { width: number; height: number }> = {
+export const windowMinimumSizes: Record<
+  AppId,
+  { width: number; height: number }
+> = {
   profile: { width: 460, height: 420 },
   resume: { width: 620, height: 520 },
   projects: { width: 520, height: 460 },
@@ -237,11 +247,19 @@ export const projects = [
       "Installable PWA with offline caching for static runtime assets",
     ],
     stack: ["TypeScript", "React", "Web APIs", "Vercel"],
-    responsibilities: ["Frontend architecture", "User experience", "Deployment"],
-    decision: "Keep the delivery client separate from Studio Edition to reduce coupling between authoring and playback concerns.",
-    challenge: "Turn studio-authored experiences into a direct, approachable interface for end users.",
-    build: "A separate React application that keeps the user experience independent from creator tooling.",
-    outcome: "Deployed as a live companion product with its own public codebase and release surface.",
+    responsibilities: [
+      "Frontend architecture",
+      "User experience",
+      "Deployment",
+    ],
+    decision:
+      "Keep the delivery client separate from Studio Edition to reduce coupling between authoring and playback concerns.",
+    challenge:
+      "Turn studio-authored experiences into a direct, approachable interface for end users.",
+    build:
+      "A separate React application that keeps the user experience independent from creator tooling.",
+    outcome:
+      "Deployed as a live companion product with its own public codebase and release surface.",
     links: [
       ["Web app", "https://pixelated-user-edition.vercel.app/"],
       ["Repo", "https://github.com/Nghi-creator/Pixelated-User-Edition"],
@@ -305,7 +323,7 @@ export const terminalResponses: Record<string, string[]> = {
   whoami: [
     "Nicholas Nguyen",
     "Aspiring software engineer focused on robust, scalable software.",
-    "Current obsession: latency, cloud compute, and cloud gaming infrastructure.",
+    "Current obsession: latency, system design, software architecture, distributed systems, and cloud compute.",
   ],
   projects: [
     "PIXELATED Studio Edition",
@@ -316,14 +334,14 @@ export const terminalResponses: Record<string, string[]> = {
     "Open the Resume app for a recruiter-friendly scan of experience, education, certifications, stack, and links.",
   ],
   skills: [
-    "TypeScript, React, Java, Express.js, PostgreSQL, MySQL, MongoDB, AWS, GCP, Docker, Kubernetes, Helm, Terraform, GitHub Actions",
+    "TypeScript, JavaScript, React, Java, Express.js, Fastify, Spring Boot, PostgreSQL, MySQL, MongoDB, AWS, GCP, Docker, Kubernetes, Helm, Terraform, GitHub Actions",
   ],
   cloud: [
     "Domain focus: cloud-native infrastructure, delivery automation, ultra-low latency, and raw cloud compute.",
   ],
   contact: [
     "Dev.to: dev.to/nicholasthegreat",
-    "LinkedIn: Nicholas Nguyen",
+    "LinkedIn: https://www.linkedin.com/in/nicholas-nguyen-3bb17a335/",
     "Email: gianghi30032005@gmail.com",
   ],
 };

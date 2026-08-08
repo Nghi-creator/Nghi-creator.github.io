@@ -195,6 +195,10 @@ describe("CreatorOS routes and interactions", () => {
     render(<App />);
 
     await user.click(screen.getByTitle("Open Terminal"));
+    expect(screen.getByRole("log", { name: "Terminal output" })).toHaveClass(
+      "flex-1",
+      "overflow-y-auto",
+    );
     await user.type(screen.getByPlaceholderText("help"), "frobnicate{Enter}");
 
     expect(screen.getByText("Unknown command: frobnicate")).toBeInTheDocument();
