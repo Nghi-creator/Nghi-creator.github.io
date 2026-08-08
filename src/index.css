@@ -92,6 +92,10 @@ input {
   }
 }
 
+article[data-window-mode="maximized"] .education-layout {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
 @keyframes dock-bounce {
   0% {
     transform: translateY(0) scale(1);

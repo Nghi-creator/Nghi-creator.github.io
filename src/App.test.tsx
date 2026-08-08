@@ -112,6 +112,24 @@ describe("CreatorOS routes and interactions", () => {
         "AWS Certified Solutions Architect - Associate",
       ),
     ).toBeInTheDocument();
+    expect(
+      within(educationSection!).getByRole("link", { name: "Open in Google Maps" }),
+    ).toBeInTheDocument();
+    expect(
+      within(educationSection!).queryByRole("region", { name: /Interactive map/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("embeds the school map in the desktop education app", async () => {
+    const user = userEvent.setup();
+    window.localStorage.setItem(VISITED_STORAGE_KEY, "1");
+    render(<App />);
+
+    await user.click(screen.getByTitle("Open Education"));
+
+    expect(
+      await screen.findByRole("region", { name: /Interactive map of VNUHCM/i }),
+    ).toBeInTheDocument();
   });
 
   it("shows both mobile CVs with independent view and file-sharing actions", async () => {
