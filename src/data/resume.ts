@@ -3,10 +3,11 @@ import { topSkills } from "./profile";
 export const coreStack = [
   "TypeScript",
   "JavaScript",
-  "React",
   "Java",
+  "Python",
   "C",
   "C++",
+  "React",
   "Express.js",
   "Fastify",
   "Spring Boot",
