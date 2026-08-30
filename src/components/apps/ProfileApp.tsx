@@ -1,10 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import {
-  Award,
-  Building2,
-  GraduationCap,
-  Waves,
-} from "lucide-react";
+import { Award, Building2, GraduationCap, Waves } from "lucide-react";
 import { topSkills } from "../../data/profile";
 import { InfoGroup } from "./AppChrome";
 
@@ -25,10 +20,10 @@ export function ProfileApp() {
         </div>
       </div>
       <p className="text-sm leading-6 text-white/70">
-        I build systems that connect product experience with the infrastructure
-        underneath it. My current focus is personal edge cloud gaming,
-        latency-sensitive media pipelines, and scalable software that is
-        practical enough to ship.
+        I love exploring and building software across the stack, from
+        user-facing applications to the systems behind them. My current work
+        focuses on self-hosted edge cloud gaming, latency-sensitive streaming,
+        and practical methods for measuring and diagnosing system performance.
       </p>
       <div className="grid grid-cols-2 gap-3">
         <InfoTile

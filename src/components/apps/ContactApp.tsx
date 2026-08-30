@@ -21,8 +21,8 @@ export function ContactApp() {
   return (
     <div className="space-y-3">
       <p className="text-sm leading-6 text-white/70">
-        Best places to find the work, follow the writing, or start a
-        conversation.
+        Best places to follow my work, read about my writing, or start a
+        conversation with me.
       </p>
       {links.map(([label, href, Icon]) => (
         <a
