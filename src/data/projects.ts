@@ -78,7 +78,7 @@ export const projects: PortfolioProject[] = [
     name: "PIXELATED User Edition",
     category: "Browser systems · Active project",
     description:
-      "A separate browser-native client for the PIXELATED ecosystem. It shares the catalog, accounts, and community services with the Studio version, but runs supported games locally through WebAssembly instead of using the desktop engine or a WebRTC stream.",
+      "A separate browser-native client for the PIXELATED ecosystem. It shares the catalog, and community services with the Studio version, but runs supported games locally through WebAssembly instead of using the desktop engine or a WebRTC stream like Studio.",
     status:
       "NES, Game Boy, and Game Boy Color are playable in the browser. The application is deployed as an installable PWA and keeps personal game files on the user's device.",
     highlights: [
