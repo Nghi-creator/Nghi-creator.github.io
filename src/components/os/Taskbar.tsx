@@ -212,10 +212,10 @@ function CreatorPanel({
         ))}
       </div>
       <div className="grid grid-cols-2 gap-2 border-t border-white/10 pt-3">
-        <button className="flex items-center gap-2 rounded-md bg-[#1f7a4a]/18 px-3 py-2 text-xs font-black text-emerald-50 transition hover:bg-[#1f7a4a]/30" onClick={() => { onOpenSearch(); onClose(); }}>
+        <button className="flex items-center gap-2 rounded-md bg-[#1f7a4a]/[0.18] px-3 py-2 text-xs font-black text-emerald-50 transition hover:bg-[#1f7a4a]/30" onClick={() => { onOpenSearch(); onClose(); }}>
           <Search size={14} /> Search apps
         </button>
-        <button className="rounded-md bg-[#1f7a4a]/18 px-3 py-2 text-left text-xs font-black text-emerald-50 transition hover:bg-[#1f7a4a]/30" onClick={() => { onOpenResume(); onClose(); }}>
+        <button className="rounded-md bg-[#1f7a4a]/[0.18] px-3 py-2 text-left text-xs font-black text-emerald-50 transition hover:bg-[#1f7a4a]/30" onClick={() => { onOpenResume(); onClose(); }}>
           Recruiter view
         </button>
         <button className="rounded-md px-3 py-2 text-left text-xs font-black text-white/55 transition hover:bg-white/10 hover:text-white" onClick={() => { onCloseAll(); onClose(); }}>

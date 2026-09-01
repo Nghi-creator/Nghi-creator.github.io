@@ -112,7 +112,7 @@ export function LandingPage({ onEnter }: { onEnter: () => void }) {
       </section>
 
       {isBooting ? (
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/72 px-5 backdrop-blur-sm">
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/[0.72] px-5 backdrop-blur-sm">
           <div className="w-full max-w-xl rounded-lg border border-[#1f7a4a]/45 bg-[#06160e]/95 p-5 text-left shadow-[0_24px_90px_rgba(0,0,0,0.65)]">
             <p className="font-mono text-xs font-black uppercase tracking-[0.26em] text-[#9be7b3]">
               CreatorOS boot sequence

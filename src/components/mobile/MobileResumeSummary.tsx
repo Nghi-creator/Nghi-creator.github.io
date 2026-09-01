@@ -9,7 +9,7 @@ export function MobileResumeSummary({
 }) {
   return (
     <div className="space-y-4">
-      <section className="rounded-lg border border-[#1f7a4a]/25 bg-[#1f7a4a]/12 p-4">
+      <section className="rounded-lg border border-[#1f7a4a]/25 bg-[#1f7a4a]/[0.12] p-4">
         <p className="font-mono text-[11px] font-black uppercase tracking-[0.16em] text-emerald-100/65">
           recruiter snapshot
         </p>

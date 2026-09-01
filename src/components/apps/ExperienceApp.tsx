@@ -19,7 +19,7 @@ export function ExperienceApp() {
             </div>
           </div>
           <p className="mt-3 text-sm leading-6 text-white/70">{item.summary}</p>
-          <ul className="mt-3 space-y-2 text-sm leading-6 text-white/68">
+          <ul className="mt-3 space-y-2 text-sm leading-6 text-white/[0.68]">
             {item.bullets.map((bullet) => (
               <li key={bullet} className="flex gap-2">
                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#1f7a4a]" />

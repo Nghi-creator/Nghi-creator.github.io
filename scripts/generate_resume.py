@@ -1,3 +1,11 @@
+"""Legacy one-off résumé generator.
+
+This script is not used by the portfolio build or deployment. The CVs served to
+visitors are maintained in ``public/NguyenGiaNghi_Industry_CV.pdf`` and
+``public/NguyenGiaNghi_Academic_CV.pdf``. Running this file only regenerates the
+archival PDF under ``output/pdf``.
+"""
+
 from pathlib import Path
 
 from reportlab.lib import colors

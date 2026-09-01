@@ -37,7 +37,7 @@ export function EducationApp() {
       ))}
 
       <div className="education-layout grid gap-4">
-        <section className="rounded-lg border border-[#1f7a4a]/25 bg-[#1f7a4a]/12 p-4">
+        <section className="rounded-lg border border-[#1f7a4a]/25 bg-[#1f7a4a]/[0.12] p-4">
           <div className="flex items-center gap-2 text-emerald-100">
             <Building2 size={17} aria-hidden="true" />
             <h3 className="font-mono text-xs font-black uppercase tracking-[0.12em]">

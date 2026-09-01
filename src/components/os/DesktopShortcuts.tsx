@@ -20,7 +20,7 @@ export function DesktopShortcuts({
             key={id}
             className={`group flex min-h-20 flex-col items-center justify-start gap-1.5 rounded-xl p-1.5 text-center text-xs font-semibold text-white transition focus:outline-none focus:ring-2 focus:ring-white/50 lg:min-h-[74px] ${
               selected
-                ? "bg-white/16 ring-2 ring-white/45 shadow-[0_8px_26px_rgba(0,0,0,0.25)]"
+                ? "bg-white/[0.16] ring-2 ring-white/45 shadow-[0_8px_26px_rgba(0,0,0,0.25)]"
                 : "hover:bg-white/10"
             }`}
             onClick={() => {

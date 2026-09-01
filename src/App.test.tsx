@@ -217,9 +217,41 @@ describe("CreatorOS routes and interactions", () => {
       "flex-1",
       "overflow-y-auto",
     );
-    await user.type(screen.getByPlaceholderText("help"), "frobnicate{Enter}");
+    const commandInput = screen.getByRole("textbox", {
+      name: "Terminal command",
+    });
+    await user.type(commandInput, "frobnicate{Enter}");
 
     expect(screen.getByText("Unknown command: frobnicate")).toBeInTheDocument();
+  });
+
+  it("uses valid project assets and shared CV configuration on desktop", async () => {
+    const user = userEvent.setup();
+    window.localStorage.setItem(VISITED_STORAGE_KEY, "1");
+    render(<App />);
+
+    await user.click(screen.getByTitle("Open Projects"));
+    const projectsWindow = screen.getByRole("dialog", { name: "Projects" });
+    const studioProject = within(projectsWindow)
+      .getByRole("heading", { name: "PIXELATED Studio" })
+      .closest("article");
+    expect(studioProject).not.toBeNull();
+    expect(
+      within(studioProject!).getByRole("link", { name: "Architecture" }),
+    ).toHaveAttribute("href", "/edge-cloud-architecture.webp");
+
+    await user.click(screen.getByTitle("Open Resume"));
+    const resumeWindow = screen.getByRole("dialog", { name: "Resume" });
+    expect(
+      within(resumeWindow).getByRole("link", {
+        name: "View industry résumé",
+      }),
+    ).toHaveAttribute("href", "/NguyenGiaNghi_Industry_CV.pdf");
+    expect(
+      within(resumeWindow).getByRole("link", {
+        name: "Download academic CV",
+      }),
+    ).toHaveAttribute("download", "Nicholas_Nguyen_Academic_CV.pdf");
   });
 
   it("removes the Skill Map app from the desktop", () => {

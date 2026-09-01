@@ -54,7 +54,7 @@ export function CommandPalette({
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <section
         ref={dialogRef}
-        className="w-full max-w-xl overflow-hidden rounded-lg border border-[#1f7a4a]/45 bg-[#06160e]/98 shadow-[0_30px_100px_rgba(0,0,0,0.7)]"
+        className="w-full max-w-xl overflow-hidden rounded-lg border border-[#1f7a4a]/45 bg-[#06160e]/[0.98] shadow-[0_30px_100px_rgba(0,0,0,0.7)]"
         role="dialog"
         aria-modal="true"
         aria-label="CreatorOS command palette"
@@ -94,6 +94,7 @@ export function CommandPalette({
           <Search size={18} className="text-emerald-200/65" />
           <input
             ref={inputRef}
+            aria-label="Search apps or commands"
             className="h-14 min-w-0 flex-1 bg-transparent text-sm font-bold text-white outline-none placeholder:text-white/55"
             placeholder="Search apps or commands"
             value={query}
@@ -116,7 +117,7 @@ export function CommandPalette({
             return (
               <button
                 key={id}
-                className="flex w-full items-center gap-3 rounded-md px-3 py-3 text-left text-sm font-bold text-white/80 transition hover:bg-[#1f7a4a]/22 hover:text-white focus:bg-[#1f7a4a]/22 focus:outline-none"
+                className="flex w-full items-center gap-3 rounded-md px-3 py-3 text-left text-sm font-bold text-white/80 transition hover:bg-[#1f7a4a]/[0.22] hover:text-white focus:bg-[#1f7a4a]/[0.22] focus:outline-none"
                 onClick={() => {
                   onOpenApp(id);
                   onClose();

@@ -6,11 +6,13 @@ import {
   ExternalLink,
   GraduationCap,
 } from "lucide-react";
+import { Fragment } from "react";
 import {
   certifications,
   educationItems,
   experienceItems,
 } from "../../data/profile";
+import { cvOptions } from "../../data/cv";
 import { coreStack, resumeFocus } from "../../data/resume";
 import { InfoGroup, SectionTitle } from "./AppChrome";
 
@@ -25,49 +27,44 @@ const links = [
 export function ResumeApp() {
   return (
     <div className="space-y-4">
-      <section className="rounded-lg border border-[#1f7a4a]/25 bg-[#1f7a4a]/12 p-4">
+      <section className="rounded-lg border border-[#1f7a4a]/25 bg-[#1f7a4a]/[0.12] p-4">
         <p className="font-mono text-[11px] font-black uppercase tracking-[0.16em] text-emerald-100/60">
           recruiter scan
         </p>
         <h2 className="mt-2 text-2xl font-black text-emerald-50">
           Nicholas Nguyen
         </h2>
-        <p className="mt-2 text-sm leading-6 text-white/72">
+        <p className="mt-2 text-sm leading-6 text-white/[0.72]">
           Aspiring software engineer focused on robust, scalable software, cloud
           infrastructure, low-latency systems, and products that feel practical
           enough to ship.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <a
-            className="inline-flex items-center gap-2 rounded-md border border-[#63c88e]/40 bg-[#1f7a4a]/15 px-3 py-2 text-xs font-black text-emerald-50 transition hover:bg-[#1f7a4a]/25"
-            href="/NguyenGiaNghi_Industry_CV.pdf"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Eye size={14} /> View industry résumé
-          </a>
-          <a
-            className="inline-flex items-center gap-2 rounded-md bg-[#1f7a4a] px-3 py-2 text-xs font-black text-[#052416] transition hover:bg-[#2b9a60]"
-            href="/NguyenGiaNghi_Industry_CV.pdf"
-            download
-          >
-            <Download size={14} /> Download industry résumé
-          </a>
-          <a
-            className="inline-flex items-center gap-2 rounded-md border border-[#63c88e]/40 bg-[#1f7a4a]/15 px-3 py-2 text-xs font-black text-emerald-50 transition hover:bg-[#1f7a4a]/25"
-            href="/NguyenGiaNghi_Academic_CV.pdf"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Eye size={14} /> View academic CV
-          </a>
-          <a
-            className="inline-flex items-center gap-2 rounded-md bg-[#1f7a4a] px-3 py-2 text-xs font-black text-[#052416] transition hover:bg-[#2b9a60]"
-            href="/NguyenGiaNghi_Academic_CV.pdf"
-            download
-          >
-            <Download size={14} /> Download academic CV
-          </a>
+          {cvOptions.map((cv) => {
+            const documentLabel =
+              cv.id === "industry" ? "industry résumé" : "academic CV";
+
+            return (
+              <Fragment key={cv.id}>
+                <a
+                  className="inline-flex items-center gap-2 rounded-md border border-[#63c88e]/40 bg-[#1f7a4a]/15 px-3 py-2 text-xs font-black text-emerald-50 transition hover:bg-[#1f7a4a]/25"
+                  href={cv.path}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Eye size={14} aria-hidden="true" /> View {documentLabel}
+                </a>
+                <a
+                  className="inline-flex items-center gap-2 rounded-md bg-[#1f7a4a] px-3 py-2 text-xs font-black text-[#052416] transition hover:bg-[#2b9a60]"
+                  href={cv.path}
+                  download={cv.filename}
+                >
+                  <Download size={14} aria-hidden="true" /> Download{" "}
+                  {documentLabel}
+                </a>
+              </Fragment>
+            );
+          })}
         </div>
       </section>
 

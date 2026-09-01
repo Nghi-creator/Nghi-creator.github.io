@@ -5,7 +5,7 @@ CreatorOS is my interactive portfolio: a personal desktop-style web page where e
 Live site: https://nghi-creator.github.io/
 
 <p align="center">
-  <img src="public/creatoros-preview.jpg" alt="CreatorOS desktop preview" width="100%">
+  <img src="public/creatoros-preview.png" alt="CreatorOS desktop preview" width="100%">
 </p>
 
 ## What It Shows
@@ -67,6 +67,13 @@ npm test
 ```
 
 The GitHub Pages workflow runs linting, interaction and route tests, and the production build before deployment.
+
+## CV files
+
+The downloadable CVs used by the site are `public/NguyenGiaNghi_Industry_CV.pdf`
+and `public/NguyenGiaNghi_Academic_CV.pdf`. The older
+`scripts/generate_resume.py` utility is an archival one-off generator and does
+not update the files served by the portfolio.
 
 ## Browser security policy
 

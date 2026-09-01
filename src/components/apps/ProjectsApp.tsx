@@ -28,11 +28,11 @@ export function ProjectsApp() {
               {project.category}
             </p>
             <h3 className="text-lg font-bold text-white">{project.name}</h3>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-white/72">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-white/[0.72]">
               {project.description}
             </p>
 
-            <p className="mt-4 border-l-2 border-emerald-300/55 pl-3 text-sm leading-6 text-white/68">
+            <p className="mt-4 border-l-2 border-emerald-300/55 pl-3 text-sm leading-6 text-white/[0.68]">
               <span className="font-semibold text-white/85">
                 Current status:{" "}
               </span>

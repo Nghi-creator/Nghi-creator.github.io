@@ -3,7 +3,7 @@ import "leaflet/dist/leaflet.css";
 import markerIconUrl from "leaflet/dist/images/marker-icon.png";
 import markerIconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
 import markerShadowUrl from "leaflet/dist/images/marker-shadow.png";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const campusCoordinates: L.LatLngExpression = [10.76278, 106.68139];
 const campusMarkerIcon = L.icon({
@@ -18,6 +18,7 @@ const campusMarkerIcon = L.icon({
 
 export function EducationMap() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [tileUnavailable, setTileUnavailable] = useState(false);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -29,10 +30,32 @@ export function EducationMap() {
       scrollWheelZoom: false,
     });
 
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; OpenStreetMap contributors",
-      maxZoom: 19,
-    }).addTo(map);
+    let loadedTileCount = 0;
+    let failedTileCount = 0;
+    const tileLayer = L.tileLayer(
+      "https://tile.openstreetmap.de/{z}/{x}/{y}.png",
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+      },
+    );
+    tileLayer.on("loading", () => {
+      loadedTileCount = 0;
+      failedTileCount = 0;
+      setTileUnavailable(false);
+    });
+    tileLayer.on("tileload", () => {
+      loadedTileCount += 1;
+    });
+    tileLayer.on("tileerror", () => {
+      failedTileCount += 1;
+      if (loadedTileCount === 0) setTileUnavailable(true);
+    });
+    tileLayer.on("load", () => {
+      setTileUnavailable(loadedTileCount === 0 && failedTileCount > 0);
+    });
+    tileLayer.addTo(map);
 
     L.marker(campusCoordinates, { icon: campusMarkerIcon })
       .addTo(map)
@@ -58,16 +81,31 @@ export function EducationMap() {
       resizeObserver?.disconnect();
       window.removeEventListener("resize", syncMapSize);
       window.cancelAnimationFrame(resizeFrame);
+      tileLayer.off();
       map.remove();
     };
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="h-56 w-full border-y border-white/10 bg-black/20"
-      role="region"
-      aria-label="Interactive map of VNUHCM University of Science Nguyen Van Cu campus"
-    />
+    <div className="relative">
+      <div
+        ref={containerRef}
+        className="h-56 w-full border-y border-white/10 bg-black/20"
+        role="region"
+        aria-label="Interactive map of VNUHCM University of Science Nguyen Van Cu campus"
+      />
+      {tileUnavailable ? (
+        <div
+          className="pointer-events-none absolute inset-0 z-[900] flex items-center justify-center border-y border-white/10 bg-[#06160e]/95 px-6 text-center"
+          role="status"
+          aria-live="polite"
+        >
+          <p className="max-w-sm text-sm font-bold leading-6 text-white/75">
+            Map tiles are temporarily unavailable. Use the Google Maps button
+            below to view the campus location.
+          </p>
+        </div>
+      ) : null}
+    </div>
   );
 }

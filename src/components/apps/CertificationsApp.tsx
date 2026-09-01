@@ -10,7 +10,7 @@ export function CertificationsApp() {
         {certifications.map((certification, index) => (
           <article
             key={certification.name}
-            className={`group relative overflow-hidden rounded-lg border border-[#1f7a4a]/30 bg-[#1f7a4a]/12 p-4 transition hover:border-[#63c88e]/55 hover:bg-[#1f7a4a]/18 ${
+            className={`group relative overflow-hidden rounded-lg border border-[#1f7a4a]/30 bg-[#1f7a4a]/[0.12] p-4 transition hover:border-[#63c88e]/55 hover:bg-[#1f7a4a]/[0.18] ${
               index === 0 ? "sm:col-span-2" : ""
             }`}
           >

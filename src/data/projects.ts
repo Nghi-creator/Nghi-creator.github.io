@@ -67,7 +67,7 @@ export const projects: PortfolioProject[] = [
         "Repository",
         "https://github.com/Nghi-creator/Pixelated-Studio-Edition",
       ],
-      ["Architecture", "/studio_architecture.webp"],
+      ["Architecture", "/edge-cloud-architecture.webp"],
     ],
     image: {
       src: "/pixelated-studio-preview.webp",
