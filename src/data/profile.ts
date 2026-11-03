@@ -186,23 +186,35 @@ export function createWindowState(id: AppId, z: number): WindowState {
 }
 
 export const topSkills = [
-  "Cloud & Platform Engineering",
-  "Solution Architecture",
   "Full-Stack Development",
+  "Distributed and Cloud Systems",
+  "Systems Performance Analysis",
 ];
+
+export const profileSummary =
+  "Final-year IT student at HCMUS building full-stack applications and distributed systems. My undergraduate thesis explores latency diagnosis for edge cloud gaming, supported by a self-hosted testbed and a Python research engine.";
+
+export const researchThesis = {
+  title:
+    "Latency diagnosis and optimization mechanisms for edge cloud-gaming systems",
+  supervisor: "Professor Le Ngoc Son",
+  completion: "March 2027 (expected)",
+  question:
+    "Can a system's response to a relief action help distinguish cross-layer latency bottlenecks and guide more targeted recovery?",
+};
 
 export const experienceItems = [
   {
     company: "TMA Solutions",
-    role: "Full Stack Engineer Intern",
+    role: "Full-Stack Engineer Intern",
     dates: "June 2026 - August 2026",
     location: "Ho Chi Minh City, Vietnam",
     summary:
-      "Contributed to an AI-driven web application for project managers in an Agile engineering environment.",
+      "Completed a full-stack engineering internship on an AI-assisted project-management application.",
     bullets: [
-      "Developed end-to-end features with the MERN stack: MongoDB, Express.js, React, and Node.js.",
+      "Implemented bug fixes, product improvements, and small features with MongoDB, Express.js, React, and Node.js.",
       "Modeled and queried MongoDB data through Mongoose.",
-      "Built API test suites and participated in sprints, code reviews, and engineering collaboration.",
+      "Developed and validated API tests, contributing changes through an Agile/Scrum workflow.",
     ],
   },
 ];
@@ -210,8 +222,9 @@ export const experienceItems = [
 export const educationItems = [
   {
     school: "VNUHCM - University of Science",
-    program: "Bachelor's degree, Information Technology",
-    dates: "September 2023 - May 2027",
+    program: "Bachelor of Science, Information Technology",
+    dates: "September 2023 - May 2027 (expected)",
+    standing: "GPA: 8.41/10.00 (3.61/4.00) · 133 credits completed",
   },
 ];
 
@@ -237,16 +250,24 @@ export const certifications = [
 ];
 
 export const terminalResponses: Record<string, string[]> = {
-  help: ["Commands: whoami, resume, projects, skills, cloud, contact, clear"],
+  help: [
+    "Commands: whoami, resume, projects, research, skills, cloud, contact, clear",
+  ],
   whoami: [
     "Nicholas Nguyen",
-    "Aspiring software engineer focused on robust, scalable software.",
+    profileSummary,
     "Current obsession: latency, system design, software architecture, distributed systems, and cloud compute.",
   ],
   projects: [
+    "Latency Fingerprinting — Python research engine",
     "PIXELATED Studio Edition",
     "PIXELATED User Edition",
     "Try: open the Projects window.",
+  ],
+  research: [
+    researchThesis.title,
+    `Supervisor: ${researchThesis.supervisor}. Expected completion: ${researchThesis.completion}.`,
+    "Implemented: measurement validation, stage-trace analysis, experiment inspection, robust profile matching, passive replay, and offline evaluation.",
   ],
   resume: [
     "Open the Resume app for a recruiter-friendly scan of experience, education, certifications, stack, and links.",

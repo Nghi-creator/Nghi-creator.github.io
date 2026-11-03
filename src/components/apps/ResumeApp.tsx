@@ -1,3 +1,4 @@
+import { ResearchSummary } from "./ResearchSummary";
 import {
   Award,
   BriefcaseBusiness,
@@ -8,6 +9,7 @@ import {
 } from "lucide-react";
 import { Fragment } from "react";
 import {
+  profileSummary,
   certifications,
   educationItems,
   experienceItems,
@@ -35,9 +37,7 @@ export function ResumeApp() {
           Nicholas Nguyen
         </h2>
         <p className="mt-2 text-sm leading-6 text-white/[0.72]">
-          Aspiring software engineer focused on robust, scalable software, cloud
-          infrastructure, low-latency systems, and products that feel practical
-          enough to ship.
+          {profileSummary}
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           {cvOptions.map((cv) => {
@@ -67,6 +67,8 @@ export function ResumeApp() {
           })}
         </div>
       </section>
+
+      <ResearchSummary />
 
       <div className="grid gap-3 md:grid-cols-2">
         <InfoGroup title="Core stack" items={coreStack} />
@@ -105,6 +107,9 @@ export function ResumeApp() {
               </h3>
               <p className="mt-1 text-sm leading-6 text-white/70">
                 {item.program}
+              </p>
+              <p className="mt-1 text-sm leading-6 text-white/70">
+                {item.standing}
               </p>
               <p className="mt-2 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-white/60">
                 {item.dates}

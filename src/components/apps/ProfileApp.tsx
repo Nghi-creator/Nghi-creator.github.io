@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
-import { Award, Building2, GraduationCap, Waves } from "lucide-react";
-import { topSkills } from "../../data/profile";
+import { Award, FlaskConical, GraduationCap, Waves } from "lucide-react";
+import { profileSummary, topSkills } from "../../data/profile";
 import { InfoGroup } from "./AppChrome";
 
 export function ProfileApp() {
@@ -15,21 +15,18 @@ export function ProfileApp() {
         <div>
           <h2 className="text-2xl font-black">Nicholas Nguyen</h2>
           <p className="text-sm leading-6 text-white/70">
-            Aspiring software engineer building robust, scalable software.
+            Software engineering · Distributed systems · Performance
           </p>
         </div>
       </div>
       <p className="text-sm leading-6 text-white/70">
-        I love exploring and building software across the stack, from
-        user-facing applications to the systems behind them. My current work
-        focuses on self-hosted edge cloud gaming, latency-sensitive streaming,
-        and practical methods for measuring and diagnosing system performance.
+        {profileSummary}
       </p>
       <div className="grid grid-cols-2 gap-3">
         <InfoTile
-          icon={Building2}
-          label="Current role"
-          value="SWE Intern @ TMA"
+          icon={FlaskConical}
+          label="Current focus"
+          value="Undergraduate thesis"
         />
         <InfoTile icon={GraduationCap} label="Education" value="HCMUS IT" />
         <InfoTile icon={Award} label="Certifications" value="2x AWS + IELTS" />

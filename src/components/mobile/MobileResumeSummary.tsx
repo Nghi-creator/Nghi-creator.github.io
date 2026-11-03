@@ -1,3 +1,5 @@
+import { profileSummary } from "../../data/profile";
+import { ResearchSummary } from "../apps/ResearchSummary";
 import { FileText } from "lucide-react";
 import { coreStack, resumeFocus } from "../../data/resume";
 import { InfoGroup } from "../apps/AppChrome";
@@ -17,9 +19,7 @@ export function MobileResumeSummary({
           Nicholas Nguyen
         </h3>
         <p className="mt-2 text-sm leading-6 text-white/75">
-          Aspiring software engineer focused on robust, scalable software, cloud
-          infrastructure, low-latency systems, and products that feel practical
-          enough to ship.
+          {profileSummary}
         </p>
         <button
           className="mt-4 flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-[#1f7a4a] px-4 py-2 text-sm font-black text-[#052416] transition hover:bg-[#2b9a60]"
@@ -29,6 +29,8 @@ export function MobileResumeSummary({
           <FileText size={17} aria-hidden="true" /> View or share CVs
         </button>
       </section>
+
+      <ResearchSummary />
 
       <InfoGroup title="Core stack" items={coreStack} />
       <InfoGroup title="Focus" items={resumeFocus} />
